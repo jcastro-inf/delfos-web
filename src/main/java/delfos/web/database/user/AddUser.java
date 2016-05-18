@@ -28,6 +28,8 @@ import javax.ws.rs.Produces;
 @Path("/Database/AddUser")
 public class AddUser {
 
+    public static final String IDUSER = "idUser";
+
     @Path("{idUser}")
     @GET
     @Produces("application/json")

@@ -5,25 +5,25 @@
  */
 package delfos.web.database.user;
 
-import delfos.web.json.UserJson;
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
+import delfos.common.exceptions.dataset.users.UserNotFound;
 import delfos.dataset.basic.user.User;
 import delfos.dataset.changeable.ChangeableDatasetLoader;
 import delfos.main.managers.database.DatabaseManager;
 import static delfos.web.Configuration.DATABASE_CONFIG_FILE;
+import delfos.web.database.ParameterParser;
+import static delfos.web.database.user.AddUserFeatures.IDUSER;
+import delfos.web.json.UserJson;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriInfo;
 
 /**
  *
@@ -32,32 +32,20 @@ import javax.ws.rs.core.UriInfo;
 @Path("/Database/AddUserFeatures")
 public class AddUserFeatures {
 
-    public static final String IDUSER = "idUser";
+    public static final String IDUSER = AddUser.IDUSER;
 
+    @Path("{idUser}/{featuresToAdd}")
     @GET
     @Produces("application/json")
-    public JsonObject addUserFeatures(@Context UriInfo ui) {
-        MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
+    public JsonObject addUserFeatures(@PathParam("idUser") int idUser, @PathParam("featuresToAdd") String featuresToAdd) {
 
-        if (!queryParams.containsKey(IDUSER)) {
-            return Json.createObjectBuilder()
-                    .add("status", "error")
-                    .add("message", "User not specified")
-                    .build();
+        JsonObject errorMessage = ParameterParser.validateFeaturesToAdd(featuresToAdd);
+        if (errorMessage != null) {
+            return errorMessage;
         }
 
-        int idUser;
-        {
-            final String idUserString = queryParams.get(IDUSER).get(0);
-            try {
-                idUser = new Integer(idUserString);
-            } catch (NumberFormatException ex) {
-                return Json.createObjectBuilder()
-                        .add("status", "error")
-                        .add("message", "User id is not an integer")
-                        .add(IDUSER, idUserString).build();
-            }
-        }
+        Map<String, String> featuresToAddMap = ParameterParser.extractFeatureToAdd(featuresToAdd);
+        String newName = ParameterParser.extractNewName(featuresToAdd);
 
         ChangeableDatasetLoader changeableDatasetLoader;
         try {
@@ -73,45 +61,28 @@ public class AddUserFeatures {
                     .add(IDUSER, idUser).build();
         }
 
-        String newName = extractNewName(queryParams);
-        Map<String, String> featuresToAdd = extractFeatures(queryParams);
-
-        if (!changeableDatasetLoader.getUsersDataset().allIDs().contains(idUser)) {
+        User user;
+        try {
+            user = changeableDatasetLoader.getChangeableUsersDataset().getUser(idUser);
+        } catch (UserNotFound ex) {
             return Json.createObjectBuilder()
                     .add("status", "error")
                     .add("message", "User not exists")
                     .add(IDUSER, idUser).build();
-        } else {
-
-            User user = changeableDatasetLoader.getUsersDataset().get(idUser);
-
-            delfos.main.managers.database.submanagers.AddUserFeatures.getInstance().addUserFeatures(
-                    featuresToAdd, newName, changeableDatasetLoader, user
-            );
-
-            changeableDatasetLoader.commitChangesInPersistence();
-            user = changeableDatasetLoader.getUsersDataset().get(idUser);
-            return Json.createObjectBuilder()
-                    .add("status", "ok")
-                    .add("user", UserJson.createWithFeatures(user))
-                    .build();
-
         }
-    }
 
-    public String extractNewName(MultivaluedMap<String, String> queryParams) {
-        String newName = queryParams.containsKey(DatabaseManager.ENTITY_NAME) ? queryParams.getFirst(DatabaseManager.ENTITY_NAME) : null;
-        return newName;
-    }
+        delfos.main.managers.database.submanagers.AddUserFeatures.getInstance()
+                .addUserFeatures(
+                        changeableDatasetLoader, user, newName, featuresToAddMap
+                );
 
-    public Map<String, String> extractFeatures(MultivaluedMap<String, String> queryParams) {
+        changeableDatasetLoader.commitChangesInPersistence();
+        user = changeableDatasetLoader.getChangeableUsersDataset().get(idUser);
+        return Json.createObjectBuilder()
+                .add("status", "ok")
+                .add("user", UserJson.createWithFeatures(user))
+                .build();
 
-        Map<String, String> featuresToAdd = queryParams.keySet().stream()
-                .filter(key -> !key.equals(DatabaseManager.ENTITY_NAME))
-                .filter(key -> !key.equals(IDUSER))
-                .collect(Collectors.toMap(key -> key, key -> queryParams.getFirst(key)));
-
-        return featuresToAdd;
     }
 
 }

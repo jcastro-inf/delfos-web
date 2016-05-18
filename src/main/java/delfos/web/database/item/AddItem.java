@@ -28,6 +28,8 @@ import javax.ws.rs.Produces;
 @Path("/Database/AddItem")
 public class AddItem {
 
+    public static final String IDITEM = "idItem";
+
     @Path("{idItem}")
     @GET
     @Produces("application/json")
@@ -44,7 +46,8 @@ public class AddItem {
             return Json.createObjectBuilder()
                     .add("status", "error")
                     .add("message", "Malformed command line parameters")
-                    .add("idItem", idItem).build();
+                    .add("idItem", idItem)
+                    .build();
 
         }
 

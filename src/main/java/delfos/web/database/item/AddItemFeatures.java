@@ -7,23 +7,22 @@ package delfos.web.database.item;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
+import delfos.common.exceptions.dataset.items.ItemNotFound;
 import delfos.dataset.basic.item.Item;
 import delfos.dataset.changeable.ChangeableDatasetLoader;
 import delfos.main.managers.database.DatabaseManager;
 import static delfos.web.Configuration.DATABASE_CONFIG_FILE;
+import delfos.web.database.ParameterParser;
 import delfos.web.json.ItemJson;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriInfo;
 
 /**
  *
@@ -32,32 +31,20 @@ import javax.ws.rs.core.UriInfo;
 @Path("/Database/AddItemFeatures")
 public class AddItemFeatures {
 
-    public static final String IDITEM = "idItem";
+    public static final String IDITEM = AddItem.IDITEM;
 
+    @Path("{idItem}/{featuresToAdd}")
     @GET
     @Produces("application/json")
-    public JsonObject addItemFeatures(@Context UriInfo ui) {
-        MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
+    public JsonObject addItemFeatures(@PathParam("idItem") int idItem, @PathParam("featuresToAdd") String featuresToAdd) {
 
-        if (!queryParams.containsKey(IDITEM)) {
-            return Json.createObjectBuilder()
-                    .add("status", "error")
-                    .add("message", "Item not specified")
-                    .build();
+        JsonObject errorMessage = ParameterParser.validateFeaturesToAdd(featuresToAdd);
+        if (errorMessage != null) {
+            return errorMessage;
         }
 
-        int idItem;
-        {
-            final String idItemString = queryParams.get(IDITEM).get(0);
-            try {
-                idItem = new Integer(idItemString);
-            } catch (NumberFormatException ex) {
-                return Json.createObjectBuilder()
-                        .add("status", "error")
-                        .add("message", "Item id is not an integer")
-                        .add(IDITEM, idItemString).build();
-            }
-        }
+        Map<String, String> featuresToAddMap = ParameterParser.extractFeatureToAdd(featuresToAdd);
+        String newName = ParameterParser.extractNewName(featuresToAdd);
 
         ChangeableDatasetLoader changeableDatasetLoader;
         try {
@@ -73,45 +60,27 @@ public class AddItemFeatures {
                     .add(IDITEM, idItem).build();
         }
 
-        String newName = extractNewName(queryParams);
-        Map<String, String> featuresToAdd = extractFeatures(queryParams);
-
-        if (!changeableDatasetLoader.getChangeableContentDataset().allIDs().contains(idItem)) {
+        Item item;
+        try {
+            item = changeableDatasetLoader.getChangeableContentDataset().getItem(idItem);
+        } catch (ItemNotFound ex) {
             return Json.createObjectBuilder()
                     .add("status", "error")
                     .add("message", "Item not exists")
                     .add(IDITEM, idItem).build();
-        } else {
-
-            Item item = changeableDatasetLoader.getChangeableContentDataset().get(idItem);
-
-            delfos.main.managers.database.submanagers.AddItemFeatures.getInstance().addItemFeatures(
-                    featuresToAdd, newName, changeableDatasetLoader, item
-            );
-
-            changeableDatasetLoader.commitChangesInPersistence();
-            item = changeableDatasetLoader.getChangeableContentDataset().get(idItem);
-            return Json.createObjectBuilder()
-                    .add("status", "ok")
-                    .add("item", ItemJson.createWithFeatures(item))
-                    .build();
-
         }
+
+        delfos.main.managers.database.submanagers.AddItemFeatures.getInstance()
+                .addItemFeatures(
+                        changeableDatasetLoader, item, newName, featuresToAddMap
+                );
+
+        changeableDatasetLoader.commitChangesInPersistence();
+        item = changeableDatasetLoader.getChangeableContentDataset().get(idItem);
+        return Json.createObjectBuilder()
+                .add("status", "ok")
+                .add("item", ItemJson.createWithFeatures(item))
+                .build();
+
     }
-
-    public String extractNewName(MultivaluedMap<String, String> queryParams) {
-        String newName = queryParams.containsKey(DatabaseManager.ENTITY_NAME) ? queryParams.getFirst(DatabaseManager.ENTITY_NAME) : null;
-        return newName;
-    }
-
-    public Map<String, String> extractFeatures(MultivaluedMap<String, String> queryParams) {
-
-        Map<String, String> featuresToAdd = queryParams.keySet().stream()
-                .filter(key -> !key.equals(DatabaseManager.ENTITY_NAME))
-                .filter(key -> !key.equals(IDITEM))
-                .collect(Collectors.toMap(key -> key, key -> queryParams.getFirst(key)));
-
-        return featuresToAdd;
-    }
-
 }
