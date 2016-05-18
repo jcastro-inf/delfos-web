@@ -19,6 +19,7 @@
             <groupId>es.jcastroinf.delfos</groupId>
             <artifactId>delfos</artifactId>
             <version>1.0.20160328</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.glassfish.metro</groupId>
@@ -31,6 +32,16 @@
             <artifactId>javaee-web-api</artifactId>
             <version>7.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-server</artifactId>
+            <version>1.19.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20160212</version>
         </dependency>
     </dependencies>
 
@@ -84,6 +95,6 @@
         </plugins>
     </build>
 
-    
+
 
 </project>
