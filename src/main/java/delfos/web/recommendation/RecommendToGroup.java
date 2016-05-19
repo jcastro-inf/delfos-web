@@ -39,7 +39,7 @@ import javax.ws.rs.Produces;
  *
  * @author jcastro
  */
-@Path("/Recommendation/RecommendToGroup")
+@Path("/Recommendation/Group")
 public class RecommendToGroup {
 
     @Path("BuildModel")
