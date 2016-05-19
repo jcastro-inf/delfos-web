@@ -65,12 +65,22 @@ public class ParameterParser {
     }
 
     public static Map<String, String> extractFeatureToAdd(String featuresToAdd) {
-        Map<String, String> featuresToAddMap = Arrays.stream(featuresToAdd.split(",")).filter((String featureWithValue) -> featureWithValue.contains("=")).filter((String featureWithValue) -> !featureWithValue.split("=")[0].equals(DatabaseManager.ENTITY_NAME)).filter((String featureWithValue) -> !featureWithValue.split("=")[0].equals(AddItemFeatures.IDITEM)).collect(Collectors.toMap((String key) -> key.split("=")[0], (String key) -> key.split("=")[1]));
+        Map<String, String> featuresToAddMap = Arrays.stream(featuresToAdd.split(","))
+                .filter((String featureWithValue) -> featureWithValue.contains("="))
+                .filter((String featureWithValue) -> !featureWithValue.split("=")[0].equals(DatabaseManager.ENTITY_NAME))
+                .filter((String featureWithValue) -> !featureWithValue.split("=")[0].equals(AddItemFeatures.IDITEM))
+                .collect(Collectors.toMap(
+                        (String key) -> key.split("=")[0],
+                        (String key) -> key.split("=")[1])
+                );
         return featuresToAddMap;
     }
 
     public static String extractNewName(String featuresToAdd) {
-        return Arrays.stream(featuresToAdd.split(",")).filter((String featureWithValue) -> featureWithValue.startsWith(DatabaseManager.ENTITY_NAME)).findFirst().orElse(null);
+        return Arrays.stream(featuresToAdd.split(","))
+                .filter(featureWithValue -> featureWithValue.startsWith(DatabaseManager.ENTITY_NAME))
+                .map(featureWithValue -> featureWithValue.split("=")[1])
+                .findFirst().orElse(null);
     }
 
 }
