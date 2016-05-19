@@ -54,7 +54,7 @@
                 <configuration>
                     <url>http://localhost:8080/manager/text</url>
                     <server>TomcatServer</server>
-                    <path>/delfos-web</path>
+                    <path>/${project.build.finalName}</path>
                 </configuration>
             </plugin>
             <plugin>
@@ -104,7 +104,4 @@
             </plugin>
         </plugins>
     </build>
-
-
-
 </project>
