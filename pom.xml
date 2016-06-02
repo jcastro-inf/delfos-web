@@ -173,7 +173,7 @@
                         </component>
                     </components>
                 </configuration>
-            </plugin> - See more at: https://maven-glassfish-plugin.java.net/examples/complete.html#sthash.j5dGsTWK.dpuf
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
