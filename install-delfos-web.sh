@@ -11,6 +11,12 @@ apt-get update
 
 aptitude install maven git build-essential oracle-java8-installer tomcat8 tomcat8-admin 
 
+#Set JAVA_HOME for tomcat8
+#write this after set -e: 
+export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
+nano /etc/init.d/tomcat8
+
+
 #dependencies
 git clone https://github.com/apache/commons-math.git
 cd commons-math/
@@ -41,4 +47,3 @@ nano pom.xml
 service tomcat8 restart
 
 mvn tomcat7:redeploy
-
