@@ -93,28 +93,17 @@
                 </executions>
             </plugin>
 
+            <!-- Tomcat plugin -->
             <plugin>
-                <groupId>org.glassfish.maven.plugin</groupId>
-                <artifactId>maven-glassfish-plugin</artifactId>
-                <version>2.1</version>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
                 <configuration>
-                    <glassfishDirectory>${local.glassfish.home}</glassfishDirectory>
-                    <user>admin</user>
-                    <passwordFile>${local.glassfish.passfile}</passwordFile>
-                    <domain>
-                        <name>domain1</name>
-                        <httpPort>8080</httpPort>
-                        <adminPort>4848</adminPort>
-                    </domain>
-                    <components>
-                        <component>
-                            <name>${project.artifactId}</name>
-                            <artifact>target/${project.build.finalName}.war</artifact>
-                        </component>
-                    </components>
-                    <debug>true</debug>
-                    <terse>false</terse>
-                    <echo>true</echo>
+                    <path>/${project.build.finalName}</path>
+                    <update>true</update>
+                    <url>http:// localhost:8080/manager/text</url>
+                    <username>tomcat</username>
+                    <password>tomcatuser</password>
                 </configuration>
             </plugin>
         </plugins>
