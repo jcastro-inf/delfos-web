@@ -4,7 +4,7 @@
 
     <groupId>delfos.web</groupId>
     <artifactId>delfos-web</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>war</packaging>
 
     <name>delfos-web</name>
@@ -100,7 +100,8 @@
                 <configuration>
                     <path>/${project.build.finalName}</path>
                     <update>true</update>
-                    <url>http://localhost:8080/manager/text</url>
+                    <url>http://localhost/manager/text</url>
+                    <port>80</port>
                     <username>tomcat</username>
                     <password>tomcatuser</password>
                 </configuration>
