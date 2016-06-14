@@ -26,14 +26,21 @@ import javax.ws.rs.Produces;
  * @author jcastro
  */
 @Path("/Database/AddItem")
+@Produces("text/plain")
 public class AddItem {
 
     public static final String IDITEM = "idItem";
 
     @Path("{idItem}")
     @GET
+    public String getAsPlain(@PathParam("idItem") int idItem) {
+        return getAsJSon(idItem).toString();
+    }
+
+    @Path("{idItem}")
+    @GET
     @Produces("application/json")
-    public JsonObject addItem(@PathParam("idItem") int idItem) {
+    public JsonObject getAsJSon(@PathParam("idItem") int idItem) {
 
         ChangeableDatasetLoader changeableDatasetLoader;
         try {
