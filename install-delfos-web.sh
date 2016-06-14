@@ -37,12 +37,22 @@ cd ..
 git clone https://github.com/jcastro-inf/delfos-web.git
 cd delfos-web/
 mvn clean install -DskipTests
+cd ..
+
+
+cd delfos/
+./build-install.sh
+cd ..
+
+
+#install delfos in the machine
+
 
 #Add the user with the password in the tomcat file
 nano /etc/tomcat8/tomcat-users.xml
 
 #Put the same credentials in the maven plugin configuration
-nano pom.xml
+nano delfos-web/pom.xml
 
 mvn tomcat7:redeploy
 

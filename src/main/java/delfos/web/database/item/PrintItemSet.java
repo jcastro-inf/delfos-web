@@ -34,19 +34,27 @@ public class PrintItemSet {
     @GET
     @Produces(MediaType.TEXT_HTML)
     public String printItemSetHTML() {
-        List<Item> itemSet = getItemSet();
-        JsonArray items = ItemJson.getItemsArray(itemSet);
+        try {
+            List<Item> itemSet = getItemSet();
+            JsonArray items = ItemJson.getItemsArray(itemSet);
 
-        return items.toString();
+            return items.toString();
+        } catch (Throwable ex) {
+            return ex.getMessage();
+        }
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String printItemSetJson() {
-        List<Item> itemSet = getItemSet();
-        JsonArray items = ItemJson.getItemsArray(itemSet);
+        try {
+            List<Item> itemSet = getItemSet();
+            JsonArray items = ItemJson.getItemsArray(itemSet);
 
-        return items.toString();
+            return items.toString();
+        } catch (Throwable ex) {
+            return ex.getMessage();
+        }
     }
 
     public List<Item> getItemSet() {
