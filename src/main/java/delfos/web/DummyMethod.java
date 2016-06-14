@@ -21,7 +21,7 @@ import javax.ws.rs.core.MediaType;
 public class DummyMethod {
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     public String getAsPlain() {
         return Json.createObjectBuilder()
                 .add("status", "ok")
