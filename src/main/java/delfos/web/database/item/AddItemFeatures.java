@@ -7,6 +7,7 @@ package delfos.web.database.item;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
+import delfos.Constants;
 import delfos.common.exceptions.dataset.items.ItemNotFound;
 import delfos.dataset.basic.item.Item;
 import delfos.dataset.changeable.ChangeableDatasetLoader;
@@ -32,6 +33,9 @@ import javax.ws.rs.core.MediaType;
 @Path("/Database/AddItemFeatures")
 public class AddItemFeatures {
 
+    static {
+        Constants.setExitOnFail(false);
+    }
     public static final String IDITEM = AddItem.IDITEM;
 
     @Path("{idItem}/{featuresToAdd}")

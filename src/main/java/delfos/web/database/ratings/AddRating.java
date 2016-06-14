@@ -7,6 +7,7 @@ package delfos.web.database.ratings;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
+import delfos.Constants;
 import delfos.common.exceptions.dataset.items.ItemNotFound;
 import delfos.common.exceptions.dataset.users.UserNotFound;
 import delfos.dataset.basic.item.Item;
@@ -34,6 +35,10 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/Database/AddRating")
 public class AddRating {
+
+    static {
+        Constants.setExitOnFail(false);
+    }
 
     @Path("{idUser}/{idItem}/{value}")
     @GET

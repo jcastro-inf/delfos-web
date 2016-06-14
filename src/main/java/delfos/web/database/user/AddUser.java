@@ -7,6 +7,7 @@ package delfos.web.database.user;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
+import delfos.Constants;
 import delfos.dataset.basic.user.User;
 import delfos.dataset.changeable.ChangeableDatasetLoader;
 import delfos.main.managers.database.DatabaseManager;
@@ -28,6 +29,9 @@ import javax.ws.rs.core.MediaType;
 @Path("/Database/AddUser")
 public class AddUser {
 
+    static {
+        Constants.setExitOnFail(false);
+    }
     public static final String IDUSER = "idUser";
 
     @Path("{idUser}")

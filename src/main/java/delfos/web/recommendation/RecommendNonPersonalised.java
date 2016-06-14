@@ -7,6 +7,7 @@ package delfos.web.recommendation;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
+import delfos.Constants;
 import delfos.common.Chronometer;
 import delfos.configfile.rs.single.RecommenderSystemConfiguration;
 import delfos.configfile.rs.single.RecommenderSystemConfigurationFileParser;
@@ -35,6 +36,10 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/Recommendation/NonPersonalised")
 public class RecommendNonPersonalised {
+
+    static {
+        Constants.setExitOnFail(false);
+    }
 
     @Path("BuildModel")
     @GET
