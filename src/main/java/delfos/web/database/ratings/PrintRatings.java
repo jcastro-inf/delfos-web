@@ -25,10 +25,10 @@ import javax.ws.rs.core.MediaType;
  * @author jcastro
  */
 @Path("/Database/PrintRatings")
+@Produces(MediaType.TEXT_PLAIN)
 public class PrintRatings {
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
     public String getAsText() {
         return getAsJson().toString();
 

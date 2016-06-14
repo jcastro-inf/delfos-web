@@ -29,11 +29,11 @@ import javax.ws.rs.core.MediaType;
  * @author jcastro
  */
 @Path("/Database/PrintUserSet")
+@Produces(MediaType.TEXT_PLAIN)
 public class PrintUserSet {
 
     // This method is called if HTML is request
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
     public String getAsText() {
         List<User> userSet = getUserSet();
         JsonArray users = UserJson.getUsersArray(userSet);

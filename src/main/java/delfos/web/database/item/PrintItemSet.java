@@ -29,10 +29,10 @@ import javax.ws.rs.core.MediaType;
  * @author jcastro
  */
 @Path("/Database/PrintItemSet")
+@Produces(MediaType.TEXT_PLAIN)
 public class PrintItemSet {
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
     public String getAsText() {
         List<Item> itemSet = getItemSet();
         JsonArray items = ItemJson.getItemsArray(itemSet);

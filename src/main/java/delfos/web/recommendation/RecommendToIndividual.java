@@ -38,11 +38,11 @@ import javax.ws.rs.core.MediaType;
  * @author jcastro
  */
 @Path("/Recommendation/RecommendToIndividual")
+@Produces(MediaType.TEXT_PLAIN)
 public class RecommendToIndividual {
 
     @Path("BuildModel")
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public String buildModel_asText() {
         return buildModel_asJson().toString();
     }
@@ -82,7 +82,6 @@ public class RecommendToIndividual {
 
     @Path("Recommend/{idUser}")
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
     public String recommendToIndividual_asText(@PathParam("idUser") int idUser) {
         return recommendToIndividual_asJson(idUser).toString();
     }

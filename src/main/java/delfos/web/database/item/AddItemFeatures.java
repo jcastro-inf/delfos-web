@@ -31,13 +31,13 @@ import javax.ws.rs.core.MediaType;
  * @author jcastro
  */
 @Path("/Database/AddItemFeatures")
+@Produces(MediaType.TEXT_PLAIN)
 public class AddItemFeatures {
 
     public static final String IDITEM = AddItem.IDITEM;
 
     @Path("{idItem}/{featuresToAdd}")
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
     public String getAsPlain(@PathParam("idItem") int idItem, @PathParam("featuresToAdd") String featuresToAdd) {
         return getAsJson(idItem, featuresToAdd).toString();
     }

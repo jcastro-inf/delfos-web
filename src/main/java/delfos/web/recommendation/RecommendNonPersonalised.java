@@ -35,11 +35,11 @@ import javax.ws.rs.core.MediaType;
  * @author jcastro
  */
 @Path("/Recommendation/NonPersonalised")
+@Produces(MediaType.TEXT_PLAIN)
 public class RecommendNonPersonalised {
 
     @Path("BuildModel")
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
     public String buildModel_asText() {
         return buildModel_asJson().toString();
     }
@@ -79,7 +79,6 @@ public class RecommendNonPersonalised {
 
     @Path("Recommend")
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
     public String recommendToNonPersonalised_asText() {
         return recommendToNonPersonalised_asJson().toString();
     }

@@ -27,13 +27,13 @@ import javax.ws.rs.core.MediaType;
  * @author jcastro
  */
 @Path("/Database/AddItem")
+@Produces(MediaType.TEXT_PLAIN)
 public class AddItem {
 
     public static final String IDITEM = "idItem";
 
     @Path("{idItem}")
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
     public String getAsText(@PathParam("idItem") int idItem) {
         return getAsJSon(idItem);
     }

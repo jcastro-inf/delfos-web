@@ -42,11 +42,11 @@ import javax.ws.rs.core.MediaType;
  * @author jcastro
  */
 @Path("/Recommendation/Group")
+@Produces(MediaType.TEXT_PLAIN)
 public class RecommendToGroup {
 
     @Path("BuildModel")
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
     public String buildModel_asText() {
         return buildModel_asJson().toString();
     }
@@ -84,7 +84,6 @@ public class RecommendToGroup {
 
     @Path("Recommend/{groupMembers}")
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
     public String recommendToGroup_asText(@PathParam("groupMembers") String groupMembers) {
         return recommendToGroup_asJson(groupMembers).toString();
     }
