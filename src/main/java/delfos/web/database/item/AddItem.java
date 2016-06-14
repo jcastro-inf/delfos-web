@@ -15,7 +15,6 @@ import delfos.web.json.ItemJson;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
-import javax.json.JsonObject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -40,7 +39,7 @@ public class AddItem {
     @Path("{idItem}")
     @GET
     @Produces("application/json")
-    public JsonObject getAsJSon(@PathParam("idItem") int idItem) {
+    public String getAsJSon(@PathParam("idItem") int idItem) {
 
         ChangeableDatasetLoader changeableDatasetLoader;
         try {
@@ -54,7 +53,7 @@ public class AddItem {
                     .add("status", "error")
                     .add("message", "Malformed command line parameters")
                     .add("idItem", idItem)
-                    .build();
+                    .build().toString();
 
         }
 

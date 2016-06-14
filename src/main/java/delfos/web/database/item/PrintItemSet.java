@@ -32,7 +32,7 @@ public class PrintItemSet {
 
     // This method is called if HTML is request
     @GET
-    @Produces(MediaType.TEXT_HTML)
+    @Produces(MediaType.TEXT_PLAIN)
     public String printItemSetHTML() {
         try {
             List<Item> itemSet = getItemSet();
