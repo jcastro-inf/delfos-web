@@ -7,6 +7,7 @@ package delfos.web.database.ratings;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
+import delfos.Constants;
 import delfos.common.exceptions.dataset.items.ItemNotFound;
 import delfos.common.exceptions.dataset.users.UserNotFound;
 import delfos.dataset.basic.item.Item;
@@ -51,6 +52,7 @@ public class AddRating {
             @PathParam("idUser") int idUser,
             @PathParam("idItem") int idItem,
             @PathParam("value") double value) {
+        Constants.setExitOnFail(false);
 
         ChangeableDatasetLoader changeableDatasetLoader;
         {

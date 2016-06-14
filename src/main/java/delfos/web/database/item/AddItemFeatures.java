@@ -7,6 +7,7 @@ package delfos.web.database.item;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
+import delfos.Constants;
 import delfos.common.exceptions.dataset.items.ItemNotFound;
 import delfos.dataset.basic.item.Item;
 import delfos.dataset.changeable.ChangeableDatasetLoader;
@@ -45,6 +46,7 @@ public class AddItemFeatures {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonObject getAsJson(@PathParam("idItem") int idItem, @PathParam("featuresToAdd") String featuresToAdd) {
+        Constants.setExitOnFail(false);
 
         JsonObject errorMessage = ParameterParser.validateFeaturesToAdd(featuresToAdd);
         if (errorMessage != null) {

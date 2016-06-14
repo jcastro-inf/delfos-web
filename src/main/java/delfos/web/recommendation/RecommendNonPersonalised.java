@@ -7,6 +7,7 @@ package delfos.web.recommendation;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
+import delfos.Constants;
 import delfos.common.Chronometer;
 import delfos.configfile.rs.single.RecommenderSystemConfiguration;
 import delfos.configfile.rs.single.RecommenderSystemConfigurationFileParser;
@@ -47,6 +48,7 @@ public class RecommendNonPersonalised {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonValue buildModel_asJson() {
+        Constants.setExitOnFail(false);
 
         String[] arguments = new String[]{
             NonPersonalisedRecommendation.NON_PERSONALISED_MODE,
@@ -86,6 +88,7 @@ public class RecommendNonPersonalised {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonValue recommendToNonPersonalised_asJson() {
+        Constants.setExitOnFail(false);
 
         RecommenderSystemConfiguration rsc;
         try {

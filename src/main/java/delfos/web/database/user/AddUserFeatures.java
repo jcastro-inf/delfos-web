@@ -7,6 +7,7 @@ package delfos.web.database.user;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
+import delfos.Constants;
 import delfos.common.exceptions.dataset.users.UserNotFound;
 import delfos.dataset.basic.user.User;
 import delfos.dataset.changeable.ChangeableDatasetLoader;
@@ -47,7 +48,7 @@ public class AddUserFeatures {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonObject getAsJson(@PathParam("idUser") int idUser, @PathParam("featuresToAdd") String featuresToAdd) {
-
+        Constants.setExitOnFail(false);
         JsonObject errorMessage = ParameterParser.validateFeaturesToAdd(featuresToAdd);
         if (errorMessage != null) {
             return errorMessage;

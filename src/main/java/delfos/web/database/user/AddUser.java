@@ -7,6 +7,7 @@ package delfos.web.database.user;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
+import delfos.Constants;
 import delfos.dataset.basic.user.User;
 import delfos.dataset.changeable.ChangeableDatasetLoader;
 import delfos.main.managers.database.DatabaseManager;
@@ -41,6 +42,7 @@ public class AddUser {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getAsJSon(@PathParam("idUser") int idUser) {
+        Constants.setExitOnFail(false);
 
         ChangeableDatasetLoader changeableDatasetLoader;
         try {

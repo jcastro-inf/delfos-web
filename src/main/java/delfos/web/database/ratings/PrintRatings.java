@@ -7,6 +7,7 @@ package delfos.web.database.ratings;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
+import delfos.Constants;
 import delfos.dataset.changeable.ChangeableDatasetLoader;
 import delfos.main.managers.database.DatabaseManager;
 import static delfos.web.Configuration.DATABASE_CONFIG_FILE;
@@ -37,6 +38,7 @@ public class PrintRatings {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonValue getAsJson() {
+        Constants.setExitOnFail(false);
         return getRatingsJson();
     }
 

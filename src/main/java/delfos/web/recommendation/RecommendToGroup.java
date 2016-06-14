@@ -7,6 +7,7 @@ package delfos.web.recommendation;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
+import delfos.Constants;
 import delfos.ERROR_CODES;
 import delfos.common.Chronometer;
 import delfos.configfile.rs.single.RecommenderSystemConfiguration;
@@ -54,7 +55,7 @@ public class RecommendToGroup {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonValue buildModel_asJson() {
-
+        Constants.setExitOnFail(false);
         String[] arguments = new String[]{
             GroupRecommendation.GROUP_MODE,
             ArgumentsRecommendation.BUILD_RECOMMENDATION_MODEL,
@@ -92,6 +93,7 @@ public class RecommendToGroup {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonValue recommendToGroup_asJson(@PathParam("groupMembers") String groupMembers) {
+        Constants.setExitOnFail(false);
         String[] configuration = new String[]{
             GroupRecommendation.GROUP_MODE,
             ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, Configuration.GRS_CONFIG_FILE,

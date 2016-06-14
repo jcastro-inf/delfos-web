@@ -7,6 +7,7 @@ package delfos.web.database.item;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
+import delfos.Constants;
 import delfos.dataset.basic.item.Item;
 import delfos.dataset.changeable.ChangeableDatasetLoader;
 import delfos.main.managers.database.DatabaseManager;
@@ -41,6 +42,7 @@ public class AddItem {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getAsJSon(@PathParam("idItem") int idItem) {
+        Constants.setExitOnFail(false);
 
         ChangeableDatasetLoader changeableDatasetLoader;
         try {

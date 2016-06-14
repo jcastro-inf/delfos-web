@@ -7,6 +7,7 @@ package delfos.web.recommendation;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
+import delfos.Constants;
 import delfos.common.Chronometer;
 import delfos.common.exceptions.dataset.users.UserNotFound;
 import delfos.configfile.rs.single.RecommenderSystemConfiguration;
@@ -50,6 +51,7 @@ public class RecommendToIndividual {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonValue buildModel_asJson() {
+        Constants.setExitOnFail(false);
 
         String[] arguments = new String[]{
             SingleUserRecommendation.SINGLE_USER_MODE,
@@ -89,6 +91,7 @@ public class RecommendToIndividual {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonValue recommendToIndividual_asJson(@PathParam("idUser") int idUser) {
+        Constants.setExitOnFail(false);
 
         RecommenderSystemConfiguration rsc;
         try {
