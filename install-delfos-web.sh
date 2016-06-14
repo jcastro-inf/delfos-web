@@ -9,7 +9,7 @@ echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | te
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886
 apt-get update
 
-aptitude install maven git build-essential oracle-java8-installer tomcat8 tomcat8-admin 
+aptitude install maven git build-essential oracle-java8-installer tomcat8 tomcat8-admin
 
 #Set JAVA_HOME for tomcat8
 #write this after set -e: 
@@ -44,6 +44,36 @@ nano /etc/tomcat8/tomcat-users.xml
 #Put the same credentials in the maven plugin configuration
 nano pom.xml
 
+mvn tomcat7:redeploy
+
+#Use port 80 insteadof 8080
+
+#Set AUTHBIND=yes
+	#install the tool
+	aptitude install authbind
+	
+	#Set privileges on the port 80
+	touch /etc/authbind/byport/80
+	chmod 500 /etc/authbind/byport/80
+	chown tomcat8 /etc/authbind/byport/80
+	
+	#Tell tomcat8 to use authbind by setting AUTHBIND=yes
+	nano /etc/default/tomcat8
+
+	#Change port 8080 to 80
+	nano /etc/tomcat8/server.xml
+
 service tomcat8 restart
 
-mvn tomcat7:redeploy
+
+
+
+
+
+
+#Access through ssh 
+ssh delfos@serezade.ujaen.es -p 8001
+
+#Web access
+lynx http://serezade.ujaen.es:8000/
+
