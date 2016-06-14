@@ -7,7 +7,6 @@ package delfos.web.database.item;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
-import delfos.Constants;
 import delfos.dataset.basic.item.Item;
 import delfos.dataset.changeable.ChangeableDatasetLoader;
 import delfos.main.managers.database.DatabaseManager;
@@ -30,10 +29,6 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/Database/PrintItemSet")
 public class PrintItemSet {
-
-    static {
-        Constants.setExitOnFail(false);
-    }
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)

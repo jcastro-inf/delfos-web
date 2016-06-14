@@ -7,7 +7,6 @@ package delfos.web.recommendation;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
-import delfos.Constants;
 import delfos.common.Chronometer;
 import delfos.common.exceptions.dataset.users.UserNotFound;
 import delfos.configfile.rs.single.RecommenderSystemConfiguration;
@@ -39,10 +38,6 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/Recommendation/RecommendToIndividual")
 public class RecommendToIndividual {
-
-    static {
-        Constants.setExitOnFail(false);
-    }
 
     @Path("BuildModel")
     @GET

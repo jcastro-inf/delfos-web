@@ -7,7 +7,6 @@ package delfos.web.database.user;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
-import delfos.Constants;
 import delfos.dataset.basic.user.User;
 import delfos.dataset.changeable.ChangeableDatasetLoader;
 import delfos.main.managers.database.DatabaseManager;
@@ -30,10 +29,6 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/Database/PrintUserSet")
 public class PrintUserSet {
-
-    static {
-        Constants.setExitOnFail(false);
-    }
 
     // This method is called if HTML is request
     @GET

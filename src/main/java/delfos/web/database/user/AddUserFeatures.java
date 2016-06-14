@@ -7,7 +7,6 @@ package delfos.web.database.user;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
-import delfos.Constants;
 import delfos.common.exceptions.dataset.users.UserNotFound;
 import delfos.dataset.basic.user.User;
 import delfos.dataset.changeable.ChangeableDatasetLoader;
@@ -34,9 +33,6 @@ import javax.ws.rs.core.MediaType;
 @Path("/Database/AddUserFeatures")
 public class AddUserFeatures {
 
-    static {
-        Constants.setExitOnFail(false);
-    }
     public static final String IDUSER = AddUser.IDUSER;
 
     @Path("{idUser}/{featuresToAdd}")

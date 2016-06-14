@@ -7,7 +7,6 @@ package delfos.web.recommendation;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
-import delfos.Constants;
 import delfos.ERROR_CODES;
 import delfos.common.Chronometer;
 import delfos.configfile.rs.single.RecommenderSystemConfiguration;
@@ -43,10 +42,6 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/Recommendation/Group")
 public class RecommendToGroup {
-
-    static {
-        Constants.setExitOnFail(false);
-    }
 
     @Path("BuildModel")
     @GET
