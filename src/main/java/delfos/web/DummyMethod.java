@@ -5,6 +5,7 @@
  */
 package delfos.web;
 
+import java.util.Date;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.ws.rs.GET;
@@ -23,6 +24,7 @@ public class DummyMethod {
     public String getAsPlain() {
         return Json.createObjectBuilder()
                 .add("status", "ok")
+                .add("date", new Date().toString())
                 .add("info", "The dummy method has been executed properly, the delfos-web RESTful API seems accessible")
                 .build()
                 .toString();
