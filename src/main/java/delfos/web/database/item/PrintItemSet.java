@@ -7,7 +7,6 @@ package delfos.web.database.item;
 
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
-import delfos.Constants;
 import delfos.dataset.basic.item.Item;
 import delfos.dataset.changeable.ChangeableDatasetLoader;
 import delfos.main.managers.database.DatabaseManager;
@@ -36,8 +35,6 @@ public class PrintItemSet {
     @Produces(MediaType.TEXT_PLAIN)
     public String printItemSetHTML() {
 
-        Constants.setExitOnFail(false);
-
         try {
             List<Item> itemSet = getItemSet();
             JsonArray items = ItemJson.getItemsArray(itemSet);
@@ -51,8 +48,6 @@ public class PrintItemSet {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String printItemSetJson() {
-
-        Constants.setExitOnFail(false);
 
         try {
             List<Item> itemSet = getItemSet();
