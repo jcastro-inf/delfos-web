@@ -75,15 +75,3 @@ mvn tomcat7:redeploy
 
 service tomcat8 restart
 
-
-
-
-
-
-
-#Access through ssh 
-ssh delfos@serezade.ujaen.es -p 8001
-
-#Web access
-lynx http://serezade.ujaen.es:8000/
-
