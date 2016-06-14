@@ -33,7 +33,7 @@ public class AddItem {
     @Path("{idItem}")
     @GET
     public String getAsPlain(@PathParam("idItem") int idItem) {
-        return getAsJSon(idItem).toString();
+        return getAsJSon(idItem);
     }
 
     @Path("{idItem}")
@@ -61,14 +61,14 @@ public class AddItem {
             return Json.createObjectBuilder()
                     .add("status", "error")
                     .add("message", "Item already exists")
-                    .add("idItem", idItem).build();
+                    .add("idItem", idItem).build().toString();
         } else {
             final Item item = new Item(idItem);
             changeableDatasetLoader.getChangeableContentDataset().addItem(item);
             return Json.createObjectBuilder()
                     .add("status", "ok")
                     .add("item", ItemJson.createWithFeatures(item))
-                    .build();
+                    .build().toString();
 
         }
 
