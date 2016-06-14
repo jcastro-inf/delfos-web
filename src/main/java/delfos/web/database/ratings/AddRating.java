@@ -26,6 +26,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -36,8 +37,17 @@ public class AddRating {
 
     @Path("{idUser}/{idItem}/{value}")
     @GET
-    @Produces("application/json")
-    public JsonObject addItemFeatures(
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getAsText(@PathParam("idUser") int idUser,
+            @PathParam("idItem") int idItem,
+            @PathParam("value") double value) {
+        return getAsJson(idUser, idItem, value).toString();
+    }
+
+    @Path("{idUser}/{idItem}/{value}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonObject getAsJson(
             @PathParam("idUser") int idUser,
             @PathParam("idItem") int idItem,
             @PathParam("value") double value) {

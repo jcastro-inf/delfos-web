@@ -19,26 +19,27 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
  * @author jcastro
  */
 @Path("/Database/AddItem")
-@Produces("text/plain")
 public class AddItem {
 
     public static final String IDITEM = "idItem";
 
     @Path("{idItem}")
     @GET
-    public String getAsPlain(@PathParam("idItem") int idItem) {
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getAsText(@PathParam("idItem") int idItem) {
         return getAsJSon(idItem);
     }
 
     @Path("{idItem}")
     @GET
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public String getAsJSon(@PathParam("idItem") int idItem) {
 
         ChangeableDatasetLoader changeableDatasetLoader;

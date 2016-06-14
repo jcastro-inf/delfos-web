@@ -26,10 +26,17 @@ import javax.ws.rs.core.MediaType;
 @Path("/Database/PrintRatings")
 public class PrintRatings {
 
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getAsText() {
+        return getAsJson().toString();
+
+    }
+
     // This method is called if HTML is request
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonValue printRatingsHTML() {
+    public JsonValue getAsJson() {
         return getRatingsJson();
     }
 

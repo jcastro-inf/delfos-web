@@ -5,13 +5,13 @@
  */
 package delfos.web.database.user;
 
-import delfos.web.json.UserJson;
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
 import delfos.dataset.basic.user.User;
 import delfos.dataset.changeable.ChangeableDatasetLoader;
 import delfos.main.managers.database.DatabaseManager;
 import static delfos.web.Configuration.DATABASE_CONFIG_FILE;
+import delfos.web.json.UserJson;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,8 +32,8 @@ public class PrintUserSet {
 
     // This method is called if HTML is request
     @GET
-    @Produces(MediaType.TEXT_HTML)
-    public String printUserSetHTML() {
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getAsText() {
         List<User> userSet = getUserSet();
         JsonArray users = UserJson.getUsersArray(userSet);
 
@@ -42,7 +42,7 @@ public class PrintUserSet {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String printUserSetJson() {
+    public String getAsJson() {
         List<User> userSet = getUserSet();
         JsonArray users = UserJson.getUsersArray(userSet);
 

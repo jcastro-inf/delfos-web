@@ -30,6 +30,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -40,8 +41,15 @@ public class RecommendToIndividual {
 
     @Path("BuildModel")
     @GET
-    @Produces("application/json")
-    public JsonValue buildModel() {
+    @Produces(MediaType.APPLICATION_JSON)
+    public String buildModel_asText() {
+        return buildModel_asJson().toString();
+    }
+
+    @Path("BuildModel")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonValue buildModel_asJson() {
 
         String[] arguments = new String[]{
             SingleUserRecommendation.SINGLE_USER_MODE,
@@ -72,8 +80,15 @@ public class RecommendToIndividual {
 
     @Path("Recommend/{idUser}")
     @GET
-    @Produces("application/json")
-    public JsonValue recommendToIndividual(@PathParam("idUser") int idUser) {
+    @Produces(MediaType.TEXT_PLAIN)
+    public String recommendToIndividual_asText(@PathParam("idUser") int idUser) {
+        return recommendToIndividual_asJson(idUser).toString();
+    }
+
+    @Path("Recommend/{idUser}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonValue recommendToIndividual_asJson(@PathParam("idUser") int idUser) {
 
         RecommenderSystemConfiguration rsc;
         try {

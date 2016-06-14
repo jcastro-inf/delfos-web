@@ -30,33 +30,23 @@ import javax.ws.rs.core.MediaType;
 @Path("/Database/PrintItemSet")
 public class PrintItemSet {
 
-    // This method is called if HTML is request
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String printItemSetHTML() {
+    public String getAsText() {
+        List<Item> itemSet = getItemSet();
+        JsonArray items = ItemJson.getItemsArray(itemSet);
 
-        try {
-            List<Item> itemSet = getItemSet();
-            JsonArray items = ItemJson.getItemsArray(itemSet);
+        return items.toString();
 
-            return items.toString();
-        } catch (Throwable ex) {
-            return ex.getMessage();
-        }
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String printItemSetJson() {
+    public String getAsJson() {
+        List<Item> itemSet = getItemSet();
+        JsonArray items = ItemJson.getItemsArray(itemSet);
 
-        try {
-            List<Item> itemSet = getItemSet();
-            JsonArray items = ItemJson.getItemsArray(itemSet);
-
-            return items.toString();
-        } catch (Throwable ex) {
-            return ex.getMessage();
-        }
+        return items.toString();
     }
 
     public List<Item> getItemSet() {

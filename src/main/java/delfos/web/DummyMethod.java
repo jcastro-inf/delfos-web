@@ -11,16 +11,17 @@ import javax.json.JsonObject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
  * @author jcastro
  */
 @Path("/dummy")
-@Produces("text/plain")
 public class DummyMethod {
 
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public String getAsPlain() {
         return Json.createObjectBuilder()
                 .add("status", "ok")
@@ -32,7 +33,7 @@ public class DummyMethod {
     }
 
     @GET
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public JsonObject dummy() {
 
         return Json.createObjectBuilder()

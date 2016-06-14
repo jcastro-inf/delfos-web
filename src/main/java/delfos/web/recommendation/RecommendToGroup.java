@@ -34,6 +34,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -44,8 +45,15 @@ public class RecommendToGroup {
 
     @Path("BuildModel")
     @GET
-    @Produces("application/json")
-    public JsonValue buildModel() {
+    @Produces(MediaType.TEXT_PLAIN)
+    public String buildModel_asText() {
+        return buildModel_asJson().toString();
+    }
+
+    @Path("BuildModel")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonValue buildModel_asJson() {
 
         String[] arguments = new String[]{
             GroupRecommendation.GROUP_MODE,
@@ -75,8 +83,15 @@ public class RecommendToGroup {
 
     @Path("Recommend/{groupMembers}")
     @GET
-    @Produces("application/json")
-    public JsonValue recommendToGroup(@PathParam("groupMembers") String groupMembers) {
+    @Produces(MediaType.TEXT_PLAIN)
+    public String recommendToGroup_asText(@PathParam("groupMembers") String groupMembers) {
+        return recommendToGroup_asJson(groupMembers).toString();
+    }
+
+    @Path("Recommend/{groupMembers}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonValue recommendToGroup_asJson(@PathParam("groupMembers") String groupMembers) {
         String[] configuration = new String[]{
             GroupRecommendation.GROUP_MODE,
             ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, Configuration.GRS_CONFIG_FILE,

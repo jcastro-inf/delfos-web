@@ -15,11 +15,11 @@ import delfos.web.json.UserJson;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
-import javax.json.JsonObject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -32,8 +32,15 @@ public class AddUser {
 
     @Path("{idUser}")
     @GET
-    @Produces("application/json")
-    public JsonObject addUser(@PathParam("idUser") int idUser) {
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getAsPlain(@PathParam("idUser") int idUser) {
+        return getAsJSon(idUser);
+    }
+
+    @Path("{idUser}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAsJSon(@PathParam("idUser") int idUser) {
 
         ChangeableDatasetLoader changeableDatasetLoader;
         try {
@@ -46,7 +53,9 @@ public class AddUser {
             return Json.createObjectBuilder()
                     .add("status", "error")
                     .add("message", "Malformed command line parameters")
-                    .add("idUser", idUser).build();
+                    .add("idUser", idUser)
+                    .build()
+                    .toString();
 
         }
 
@@ -54,14 +63,17 @@ public class AddUser {
             return Json.createObjectBuilder()
                     .add("status", "error")
                     .add("message", "User already exists")
-                    .add("idUser", idUser).build();
+                    .add("idUser", idUser)
+                    .build()
+                    .toString();
         } else {
             final User user = new User(idUser);
             changeableDatasetLoader.getChangeableUsersDataset().addUser(user);
             return Json.createObjectBuilder()
                     .add("status", "ok")
                     .add("user", UserJson.createWithFeatures(user))
-                    .build();
+                    .build()
+                    .toString();
         }
     }
 }

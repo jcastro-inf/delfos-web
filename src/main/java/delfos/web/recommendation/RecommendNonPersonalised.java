@@ -27,6 +27,7 @@ import javax.json.JsonValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -37,8 +38,15 @@ public class RecommendNonPersonalised {
 
     @Path("BuildModel")
     @GET
-    @Produces("application/json")
-    public JsonValue buildModel() {
+    @Produces(MediaType.TEXT_PLAIN)
+    public String buildModel_asText() {
+        return buildModel_asJson().toString();
+    }
+
+    @Path("BuildModel")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonValue buildModel_asJson() {
 
         String[] arguments = new String[]{
             NonPersonalisedRecommendation.NON_PERSONALISED_MODE,
@@ -69,8 +77,15 @@ public class RecommendNonPersonalised {
 
     @Path("Recommend")
     @GET
-    @Produces("application/json")
-    public JsonValue recommendToNonPersonalised() {
+    @Produces(MediaType.TEXT_PLAIN)
+    public String recommendToNonPersonalised_asText() {
+        return recommendToNonPersonalised_asJson().toString();
+    }
+
+    @Path("Recommend")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonValue recommendToNonPersonalised_asJson() {
 
         RecommenderSystemConfiguration rsc;
         try {

@@ -24,6 +24,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -36,8 +37,16 @@ public class AddUserFeatures {
 
     @Path("{idUser}/{featuresToAdd}")
     @GET
-    @Produces("application/json")
-    public JsonObject addUserFeatures(@PathParam("idUser") int idUser, @PathParam("featuresToAdd") String featuresToAdd) {
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getAsText(@PathParam("idUser") int idUser, @PathParam("featuresToAdd") String featuresToAdd) {
+
+        return getAsJson(idUser, featuresToAdd).toString();
+    }
+
+    @Path("{idUser}/{featuresToAdd}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonObject getAsJson(@PathParam("idUser") int idUser, @PathParam("featuresToAdd") String featuresToAdd) {
 
         JsonObject errorMessage = ParameterParser.validateFeaturesToAdd(featuresToAdd);
         if (errorMessage != null) {

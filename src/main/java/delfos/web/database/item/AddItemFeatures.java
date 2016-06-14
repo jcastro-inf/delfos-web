@@ -23,6 +23,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -35,8 +36,15 @@ public class AddItemFeatures {
 
     @Path("{idItem}/{featuresToAdd}")
     @GET
-    @Produces("application/json")
-    public JsonObject addItemFeatures(@PathParam("idItem") int idItem, @PathParam("featuresToAdd") String featuresToAdd) {
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getAsPlain(@PathParam("idItem") int idItem, @PathParam("featuresToAdd") String featuresToAdd) {
+        return getAsJson(idItem, featuresToAdd).toString();
+    }
+
+    @Path("{idItem}/{featuresToAdd}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonObject getAsJson(@PathParam("idItem") int idItem, @PathParam("featuresToAdd") String featuresToAdd) {
 
         JsonObject errorMessage = ParameterParser.validateFeaturesToAdd(featuresToAdd);
         if (errorMessage != null) {
