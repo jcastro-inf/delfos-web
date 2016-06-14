@@ -27,6 +27,7 @@ public class ApplicationConfig extends Application {
      * project. If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(delfos.web.DummyMethod.class);
         resources.add(delfos.web.database.item.AddItem.class);
         resources.add(delfos.web.database.item.AddItemFeatures.class);
         resources.add(delfos.web.database.item.PrintItemSet.class);
