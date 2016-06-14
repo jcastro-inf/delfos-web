@@ -53,7 +53,8 @@ public class RecommendNonPersonalised {
         String[] arguments = new String[]{
             NonPersonalisedRecommendation.NON_PERSONALISED_MODE,
             ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, Configuration.NON_PERSONALISED_CONFIG_FILE,
-            ArgumentsRecommendation.BUILD_RECOMMENDATION_MODEL
+            ArgumentsRecommendation.BUILD_RECOMMENDATION_MODEL,
+            Constants.LIBRARY_CONFIGURATION_DIRECTORY, Configuration.LIBRARY_CONFIGURATION_DIRECTORY
         };
         try {
 

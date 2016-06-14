@@ -15,4 +15,5 @@ public class Configuration {
     public static final String GRS_CONFIG_FILE = "/home/delfos/grs-config.xml";
     public static final String RS_CONFIG_FILE = "/home/delfos/rs-config.xml";
     public static final String NON_PERSONALISED_CONFIG_FILE = "/home/delfos/non-personalised-config.xml";
+    public static String LIBRARY_CONFIGURATION_DIRECTORY = "/home/delfos/.config/delfos/";
 }
