@@ -11,8 +11,8 @@ package delfos.web;
  */
 public class Configuration {
 
-    public static final String DATABASE_CONFIG_FILE = "/home/jcastro/db-config.xml";
-    public static final String GRS_CONFIG_FILE = "/home/jcastro/grs-config.xml";
-    public static final String RS_CONFIG_FILE = "/home/jcastro/rs-config.xml";
-    public static final String NON_PERSONALISED_CONFIG_FILE = "/home/jcastro/non-personalised-config.xml";
+    public static final String DATABASE_CONFIG_FILE = "/home/delfos/db-config.xml";
+    public static final String GRS_CONFIG_FILE = "/home/delfos/grs-config.xml";
+    public static final String RS_CONFIG_FILE = "/home/delfos/rs-config.xml";
+    public static final String NON_PERSONALISED_CONFIG_FILE = "/home/delfos/non-personalised-config.xml";
 }
