@@ -6,8 +6,8 @@
 package delfos.web.json;
 
 import delfos.common.DateCollapse;
+import delfos.rs.recommendation.DetailField;
 import delfos.rs.recommendation.Recommendation;
-import delfos.rs.recommendation.RecommendationComputationDetails;
 import delfos.rs.recommendation.Recommendations;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,8 +27,8 @@ public class RecommendationsJson {
         JsonObjectBuilder recommendationsJson = Json.createObjectBuilder()
                 .add("status", "ok");
 
-        if (recommendations.getRecommendationComputationDetails().detailFieldSet().contains(RecommendationComputationDetails.DetailField.TimeTaken)) {
-            final String timeTaken = (String) recommendations.getRecommendationComputationDetails().getDetailFieldValue(RecommendationComputationDetails.DetailField.TimeTaken);
+        if (recommendations.getRecommendationComputationDetails().detailFieldSet().contains(DetailField.TimeTaken)) {
+            final String timeTaken = (String) recommendations.getRecommendationComputationDetails().getDetailFieldValue(DetailField.TimeTaken);
             recommendationsJson.add("timeTaken", DateCollapse.collapse(new Long(timeTaken)));
         }
 
