@@ -9,8 +9,10 @@ import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
 import delfos.Constants;
 import delfos.dataset.basic.item.Item;
+import delfos.dataset.basic.loader.types.DatasetLoader;
 import delfos.dataset.changeable.ChangeableDatasetLoader;
 import delfos.main.managers.database.DatabaseManager;
+import delfos.main.managers.database.submanagers.DatabaseCaseUseSubManager;
 import static delfos.web.Configuration.DATABASE_CONFIG_FILE;
 import delfos.web.json.ItemJson;
 import java.util.logging.Level;
@@ -49,7 +51,10 @@ public class AddItem {
             ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
                     DatabaseManager.MODE_PARAMETER,
                     DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE);
-            changeableDatasetLoader = DatabaseManager.extractChangeableDatasetHandler(consoleParameters);
+
+            DatasetLoader datasetLoader = DatabaseManager.extractDatasetHandler(consoleParameters);
+            changeableDatasetLoader = DatabaseCaseUseSubManager.viewDatasetLoaderAsChangeable(datasetLoader);
+
         } catch (CommandLineParametersError ex) {
             Logger.getLogger(AddItem.class.getName()).log(Level.SEVERE, null, ex);
             return Json.createObjectBuilder()

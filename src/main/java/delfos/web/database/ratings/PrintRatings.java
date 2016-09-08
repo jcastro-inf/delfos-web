@@ -8,7 +8,8 @@ package delfos.web.database.ratings;
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
 import delfos.Constants;
-import delfos.dataset.changeable.ChangeableDatasetLoader;
+import delfos.dataset.basic.loader.types.DatasetLoader;
+import delfos.dataset.basic.rating.Rating;
 import delfos.main.managers.database.DatabaseManager;
 import static delfos.web.Configuration.DATABASE_CONFIG_FILE;
 import javax.json.Json;
@@ -43,13 +44,13 @@ public class PrintRatings {
     }
 
     public JsonValue getRatingsJson() {
-        ChangeableDatasetLoader changeableDatasetHandler;
+        DatasetLoader<? extends Rating> datasetLoader;
         try {
             ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
                     DatabaseManager.MODE_PARAMETER,
                     DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE);
 
-            changeableDatasetHandler = DatabaseManager.extractChangeableDatasetHandler(consoleParameters);
+            datasetLoader = DatabaseManager.extractDatasetHandler(consoleParameters);
 
         } catch (CommandLineParametersError ex) {
             return Json.createObjectBuilder()
@@ -59,14 +60,14 @@ public class PrintRatings {
         }
 
         JsonArrayBuilder users = Json.createArrayBuilder();
-        changeableDatasetHandler.getUsersDataset().stream().forEach(user -> {
+        datasetLoader.getUsersDataset().stream().forEach(user -> {
 
             JsonObjectBuilder userBuilder = Json.createObjectBuilder();
 
             userBuilder.add("idUser", user.getId());
 
             JsonArrayBuilder userRatingsBuilder = Json.createArrayBuilder();
-            changeableDatasetHandler.getRatingsDataset().getUserRatingsRated(user.getId()).values()
+            datasetLoader.getRatingsDataset().getUserRatingsRated(user.getId()).values()
                     .forEach(rating -> {
                         JsonObjectBuilder ratingBuilder = Json.createObjectBuilder();
                         ratingBuilder.add("idItem", rating.getItem().getId());

@@ -9,7 +9,7 @@ import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
 import delfos.Constants;
 import delfos.dataset.basic.item.Item;
-import delfos.dataset.changeable.ChangeableDatasetLoader;
+import delfos.dataset.basic.loader.types.DatasetLoader;
 import delfos.main.managers.database.DatabaseManager;
 import static delfos.web.Configuration.DATABASE_CONFIG_FILE;
 import delfos.web.json.ItemJson;
@@ -58,9 +58,9 @@ public class PrintItemSet {
                     DatabaseManager.MODE_PARAMETER,
                     DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE);
 
-            ChangeableDatasetLoader changeableDatasetHandler = DatabaseManager.extractChangeableDatasetHandler(consoleParameters);
+            DatasetLoader datasetHandler = DatabaseManager.extractDatasetHandler(consoleParameters);
 
-            return changeableDatasetHandler.getContentDataset().stream().sorted().collect(Collectors.toList());
+            return datasetHandler.getContentDataset().stream().sorted().collect(Collectors.toList());
         } catch (CommandLineParametersError ex) {
             Logger.getLogger(PrintItemSet.class.getName()).log(Level.SEVERE, null, ex);
         }

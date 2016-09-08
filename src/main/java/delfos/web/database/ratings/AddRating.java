@@ -11,10 +11,12 @@ import delfos.Constants;
 import delfos.common.exceptions.dataset.items.ItemNotFound;
 import delfos.common.exceptions.dataset.users.UserNotFound;
 import delfos.dataset.basic.item.Item;
+import delfos.dataset.basic.loader.types.DatasetLoader;
 import delfos.dataset.basic.rating.Rating;
 import delfos.dataset.basic.user.User;
 import delfos.dataset.changeable.ChangeableDatasetLoader;
 import delfos.main.managers.database.DatabaseManager;
+import delfos.main.managers.database.submanagers.DatabaseCaseUseSubManager;
 import static delfos.web.Configuration.DATABASE_CONFIG_FILE;
 import delfos.web.json.ItemJson;
 import delfos.web.json.UserJson;
@@ -62,7 +64,9 @@ public class AddRating {
             };
             try {
                 ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(consoleParametersArray);
-                changeableDatasetLoader = DatabaseManager.extractChangeableDatasetHandler(consoleParameters);
+
+                DatasetLoader datasetLoader = DatabaseManager.extractDatasetHandler(consoleParameters);
+                changeableDatasetLoader = DatabaseCaseUseSubManager.viewDatasetLoaderAsChangeable(datasetLoader);
             } catch (CommandLineParametersError ex) {
                 Logger.getLogger(AddRating.class.getName()).log(Level.SEVERE, null, ex);
                 return Json.createObjectBuilder()
