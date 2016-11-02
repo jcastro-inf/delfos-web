@@ -18,7 +18,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonObject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -28,28 +30,28 @@ import javax.ws.rs.core.MediaType;
  *
  * @author jcastro
  */
-@Path("/Database/PrintItemSet")
+@Path("/Database/GetAllItems")
 @Produces(MediaType.TEXT_PLAIN)
-public class PrintItemSet {
+public class GetAllItems {
 
     @GET
     public String getAsText() {
-        List<Item> itemSet = getItemSet();
-        JsonArray items = ItemJson.getItemsArray(itemSet);
-
-        return items.toString();
-
+        return getAsJson().toString();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getAsJson() {
+    public JsonObject getAsJson() {
         Constants.setExitOnFail(false);
 
         List<Item> itemSet = getItemSet();
         JsonArray items = ItemJson.getItemsArray(itemSet);
 
-        return items.toString();
+        return Json.createObjectBuilder()
+                .add("status", "ok")
+                .add("message", "retrieve all items")
+                .add("items", items)
+                .build();
     }
 
     public List<Item> getItemSet() {
@@ -62,7 +64,7 @@ public class PrintItemSet {
 
             return datasetHandler.getContentDataset().stream().sorted().collect(Collectors.toList());
         } catch (CommandLineParametersError ex) {
-            Logger.getLogger(PrintItemSet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GetAllItems.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Collections.EMPTY_LIST;
     }

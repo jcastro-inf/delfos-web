@@ -31,7 +31,11 @@ public class ApplicationConfig extends Application {
         resources.add(delfos.web.DummyMethod.class);
         resources.add(delfos.web.database.item.AddItem.class);
         resources.add(delfos.web.database.item.AddItemFeatures.class);
-        resources.add(delfos.web.database.item.PrintItemSet.class);
+        resources.add(delfos.web.database.item.GetAllItems.class);
+        resources.add(delfos.web.database.item.GetFeaturesOfAllItems.class);
+        resources.add(delfos.web.database.item.GetItemDetails.class);
+        resources.add(delfos.web.database.item.GetItemsWith.class);
+        resources.add(delfos.web.database.item.GetUsedValuesOfItemFeature.class);
         resources.add(delfos.web.database.ratings.AddRating.class);
         resources.add(delfos.web.database.ratings.PrintRatings.class);
         resources.add(delfos.web.database.user.AddUser.class);

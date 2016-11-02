@@ -5,7 +5,6 @@
  */
 package delfos.web.json;
 
-import delfos.dataset.basic.features.Feature;
 import delfos.dataset.basic.item.Item;
 import java.util.List;
 import javax.json.Json;
@@ -20,34 +19,25 @@ import javax.json.JsonObjectBuilder;
  */
 public class ItemJson {
 
+    public static final String ID_ITEM = "id";
+    public static final String ITEM_NAME = "name";
+    public static final String ITEM = "item";
+
     public static JsonObject create(Item item) {
         JsonObjectBuilder itemJson = Json.createObjectBuilder();
-        itemJson.add("name", item.getName());
-        itemJson.add("id", item.getId());
+        itemJson.add(ITEM_NAME, item.getName());
+        itemJson.add(ID_ITEM, item.getId());
 
         return itemJson.build();
     }
 
     public static JsonObject createWithFeatures(Item item) {
         JsonObjectBuilder itemJson = Json.createObjectBuilder();
-        itemJson.add("name", item.getName());
-        itemJson.add("id", item.getId());
+        itemJson.add(ITEM_NAME, item.getName());
+        itemJson.add(ID_ITEM, item.getId());
 
-        JsonArrayBuilder features = Json.createArrayBuilder();
-        item.getFeatures().stream().forEach((Feature feature) -> {
-            final JsonObjectBuilder featureJson = Json.createObjectBuilder();
-            featureJson.add("feature", feature.getExtendedName());
-            Object featureValue = item.getFeatureValue(feature);
-            switch (feature.getType()) {
-                case Numerical:
-                    Number featureNumericValue = (Number) featureValue;
-                    featureJson.add("value", featureNumericValue.doubleValue());
-                default:
-                    featureJson.add("value", featureValue.toString());
-            }
-            features.add(featureJson.build());
-        });
-        itemJson.add("features", features.build());
+        JsonArrayBuilder features = FeatureJson.createFeaturesJson(item);
+        itemJson.add(FeatureJson.FEATURES, features.build());
 
         return itemJson.build();
     }

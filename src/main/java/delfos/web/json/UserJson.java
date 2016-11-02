@@ -5,7 +5,6 @@
  */
 package delfos.web.json;
 
-import delfos.dataset.basic.features.Feature;
 import delfos.dataset.basic.user.User;
 import java.util.List;
 import javax.json.Json;
@@ -20,34 +19,27 @@ import javax.json.JsonObjectBuilder;
  */
 public class UserJson {
 
+    public static final String ID_USER = "id";
+    public static final String USER_NAME = "name";
+    public static final String FEATURE = "feature";
+    public static final String FEATURES = "features";
+    public static final String FEATURE_NAME = "name";
+    public static final String FEATURE_TYPE = "type";
+    public static final String FEATURE_VALUE = "value";
+
     public static JsonObject create(User user) {
         JsonObjectBuilder userJson = Json.createObjectBuilder();
-        userJson.add("name", user.getName());
-        userJson.add("id", user.getId());
+        userJson.add(USER_NAME, user.getName());
+        userJson.add(ID_USER, user.getId());
 
         return userJson.build();
     }
 
     public static JsonObject createWithFeatures(User user) {
         JsonObjectBuilder userJson = Json.createObjectBuilder();
-        userJson.add("name", user.getName());
-        userJson.add("id", user.getId());
-
-        JsonArrayBuilder features = Json.createArrayBuilder();
-        user.getFeatures().stream().forEach((Feature feature) -> {
-            final JsonObjectBuilder featureJson = Json.createObjectBuilder();
-            featureJson.add("feature", feature.getExtendedName());
-            Object featureValue = user.getFeatureValue(feature);
-            switch (feature.getType()) {
-                case Numerical:
-                    Number featureNumericValue = (Number) featureValue;
-                    featureJson.add("value", featureNumericValue.doubleValue());
-                default:
-                    featureJson.add("value", featureValue.toString());
-            }
-            features.add(featureJson.build());
-        });
-        userJson.add("features", features.build());
+        userJson.add(USER_NAME, user.getName());
+        userJson.add(ID_USER, user.getId());
+        userJson.add(FEATURES, FeatureJson.createFeaturesJson(user));
 
         return userJson.build();
     }

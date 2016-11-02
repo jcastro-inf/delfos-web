@@ -7,7 +7,8 @@ package delfos.web.database;
 
 import delfos.dataset.basic.features.FeatureType;
 import delfos.main.managers.database.DatabaseManager;
-import delfos.web.database.item.AddItemFeatures;
+import delfos.web.json.ItemJson;
+import delfos.web.json.UserJson;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class ParameterParser {
                 messages.add(featureWithValueError);
             });
             errorJson.add("fails", messages);
-            errorJson.add("info", "Expected format: ([name=newName,])+featureName_typeSuffix=value([,featureName_typeSuffix=value])*");
+            errorJson.add("info", "Expected format: ([name=newName,])+feature=value([,feature=value])*");
             return errorJson.build();
         }
     }
@@ -68,7 +69,8 @@ public class ParameterParser {
         Map<String, String> featuresToAddMap = Arrays.stream(featuresToAdd.split(","))
                 .filter((String featureWithValue) -> featureWithValue.contains("="))
                 .filter((String featureWithValue) -> !featureWithValue.split("=")[0].equals(DatabaseManager.ENTITY_NAME))
-                .filter((String featureWithValue) -> !featureWithValue.split("=")[0].equals(AddItemFeatures.IDITEM))
+                .filter((String featureWithValue) -> !featureWithValue.split("=")[0].equals(ItemJson.ID_ITEM))
+                .filter((String featureWithValue) -> !featureWithValue.split("=")[0].equals(UserJson.ID_USER))
                 .collect(Collectors.toMap(
                         (String key) -> key.split("=")[0],
                         (String key) -> key.split("=")[1])

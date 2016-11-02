@@ -16,6 +16,7 @@ import delfos.main.managers.database.DatabaseManager;
 import delfos.main.managers.database.submanagers.DatabaseCaseUseSubManager;
 import static delfos.web.Configuration.DATABASE_CONFIG_FILE;
 import delfos.web.database.ParameterParser;
+import delfos.web.json.FeatureJson;
 import delfos.web.json.ItemJson;
 import java.util.Map;
 import java.util.logging.Level;
@@ -36,18 +37,16 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.TEXT_PLAIN)
 public class AddItemFeatures {
 
-    public static final String IDITEM = AddItem.IDITEM;
-
     @Path("{idItem}/{featuresToAdd}")
     @GET
-    public String getAsPlain(@PathParam("idItem") int idItem, @PathParam("featuresToAdd") String featuresToAdd) {
+    public String getAsPlain(@PathParam(ItemJson.ID_ITEM) int idItem, @PathParam(FeatureJson.FEATURES) String featuresToAdd) {
         return getAsJson(idItem, featuresToAdd).toString();
     }
 
     @Path("{idItem}/{featuresToAdd}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getAsJson(@PathParam("idItem") int idItem, @PathParam("featuresToAdd") String featuresToAdd) {
+    public JsonObject getAsJson(@PathParam(ItemJson.ID_ITEM) int idItem, @PathParam(FeatureJson.FEATURES) String featuresToAdd) {
         Constants.setExitOnFail(false);
 
         JsonObject errorMessage = ParameterParser.validateFeaturesToAdd(featuresToAdd);
@@ -72,7 +71,7 @@ public class AddItemFeatures {
             return Json.createObjectBuilder()
                     .add("status", "error")
                     .add("message", "Malformed command line parameters")
-                    .add(IDITEM, idItem).build();
+                    .add(ItemJson.ID_ITEM, idItem).build();
         }
 
         Item item;
@@ -82,7 +81,7 @@ public class AddItemFeatures {
             return Json.createObjectBuilder()
                     .add("status", "error")
                     .add("message", "Item not exists")
-                    .add(IDITEM, idItem).build();
+                    .add(ItemJson.ID_ITEM, idItem).build();
         }
 
         delfos.main.managers.database.submanagers.AddItemFeatures.getInstance()
