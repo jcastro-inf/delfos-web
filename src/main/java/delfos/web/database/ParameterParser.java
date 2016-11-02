@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.json.Json;
-import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
@@ -25,8 +24,8 @@ import javax.json.JsonObjectBuilder;
  */
 public class ParameterParser {
 
-    public static JsonObject validateFeaturesToAdd(String featuresToAdd) {
-        List<String> featuresToAddList = Arrays.stream(featuresToAdd.split(",")).collect(Collectors.toList());
+    public static boolean isFeaturesToAddWithSuffixValid(String features) {
+        List<String> featuresToAddList = Arrays.stream(features.split(",")).collect(Collectors.toList());
         List<String> featureWithValueErrored = featuresToAddList.stream().filter((String featureWithValue) -> {
             if (!featureWithValue.contains("=")) {
                 return true;
@@ -49,24 +48,12 @@ public class ParameterParser {
             Optional<FeatureType> featureTypeFound = Arrays.stream(FeatureType.values()).filter((FeatureType featureType) -> featureName.endsWith(featureType.getSufix())).findFirst();
             return !featureTypeFound.isPresent();
         }).collect(Collectors.toList());
-        if (featureWithValueErrored.isEmpty()) {
-            return null;
-        } else {
-            JsonObjectBuilder errorJson = Json.createObjectBuilder();
-            errorJson.add("status", "error");
-            errorJson.add("message", "Cannot read features format");
-            JsonArrayBuilder messages = Json.createArrayBuilder();
-            featureWithValueErrored.stream().forEach((String featureWithValueError) -> {
-                messages.add(featureWithValueError);
-            });
-            errorJson.add("fails", messages);
-            errorJson.add("info", "Expected format: ([name=newName,])+feature=value([,feature=value])*");
-            return errorJson.build();
-        }
+
+        return !featureWithValueErrored.isEmpty();
     }
 
-    public static Map<String, String> extractFeatureToAdd(String featuresToAdd) {
-        Map<String, String> featuresToAddMap = Arrays.stream(featuresToAdd.split(","))
+    public static Map<String, String> extractFeatureToAdd(String features) {
+        Map<String, String> featuresToAddMap = Arrays.stream(features.split(","))
                 .filter((String featureWithValue) -> featureWithValue.contains("="))
                 .filter((String featureWithValue) -> !featureWithValue.split("=")[0].equals(DatabaseManager.ENTITY_NAME))
                 .filter((String featureWithValue) -> !featureWithValue.split("=")[0].equals(ItemJson.ID_ITEM))
@@ -83,6 +70,43 @@ public class ParameterParser {
                 .filter(featureWithValue -> featureWithValue.startsWith(DatabaseManager.ENTITY_NAME))
                 .map(featureWithValue -> featureWithValue.split("=")[1])
                 .findFirst().orElse(null);
+    }
+
+    public static boolean isFeaturesToAddValid(String features) {
+        List<String> featuresToAddList = Arrays.stream(features.split(",")).collect(Collectors.toList());
+        List<String> featureWithValueErrored = featuresToAddList.stream().filter((String featureWithValue) -> {
+            if (!featureWithValue.contains("=")) {
+                return true;
+            }
+            final String[] featureWithValueFields = featureWithValue.split("=");
+            if (featureWithValueFields.length != 2) {
+                return true;
+            }
+            String featureName = featureWithValueFields[0];
+            String featureValue = featureWithValueFields[1];
+            if (featureValue.isEmpty()) {
+                return true;
+            }
+            if (featureName.isEmpty()) {
+                return true;
+            }
+            if (DatabaseManager.ENTITY_NAME.equals(featureName)) {
+                return false;
+            }
+            return true;
+        }).collect(Collectors.toList());
+
+        return !featureWithValueErrored.isEmpty();
+    }
+
+    public static JsonObject errorJson(String features) {
+        JsonObjectBuilder errorJson = Json.createObjectBuilder();
+        errorJson.add("status", "error");
+        errorJson.add("message", "Unexpected format of features''");
+        errorJson.add("features", features);
+        errorJson.add("info", "Expected format: ([name=newName,])+feature=value([,feature=value])*");
+        return errorJson.build();
+
     }
 
 }

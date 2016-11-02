@@ -39,25 +39,25 @@ public class AddUserFeatures {
 
     public static final String IDUSER = AddUser.IDUSER;
 
-    @Path("{idUser}/{featuresToAdd}")
+    @Path("{idUser}/{features}")
     @GET
-    public String getAsText(@PathParam("idUser") int idUser, @PathParam("featuresToAdd") String featuresToAdd) {
+    public String getAsText(@PathParam("idUser") int idUser, @PathParam("features") String features) {
 
-        return getAsJson(idUser, featuresToAdd).toString();
+        return getAsJson(idUser, features).toString();
     }
 
-    @Path("{idUser}/{featuresToAdd}")
+    @Path("{idUser}/{features}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getAsJson(@PathParam("idUser") int idUser, @PathParam("featuresToAdd") String featuresToAdd) {
+    public JsonObject getAsJson(@PathParam("idUser") int idUser, @PathParam("features") String features) {
         Constants.setExitOnFail(false);
-        JsonObject errorMessage = ParameterParser.validateFeaturesToAdd(featuresToAdd);
-        if (errorMessage != null) {
-            return errorMessage;
+
+        if (!ParameterParser.isFeaturesToAddWithSuffixValid(features) || !ParameterParser.isFeaturesToAddValid(features)) {
+            return ParameterParser.errorJson(features);
         }
 
-        Map<String, String> featuresToAddMap = ParameterParser.extractFeatureToAdd(featuresToAdd);
-        String newName = ParameterParser.extractNewName(featuresToAdd);
+        Map<String, String> featuresMap = ParameterParser.extractFeatureToAdd(features);
+        String newName = ParameterParser.extractNewName(features);
 
         ChangeableDatasetLoader changeableDatasetLoader;
         try {
@@ -88,7 +88,7 @@ public class AddUserFeatures {
 
         delfos.main.managers.database.submanagers.AddUserFeatures.getInstance()
                 .addUserFeatures(
-                        changeableDatasetLoader, user, newName, featuresToAddMap
+                        changeableDatasetLoader, user, newName, featuresMap
                 );
 
         changeableDatasetLoader.commitChangesInPersistence();

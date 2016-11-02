@@ -49,9 +49,8 @@ public class AddItemFeatures {
     public JsonObject getAsJson(@PathParam(ItemJson.ID_ITEM) int idItem, @PathParam(FeatureJson.FEATURES) String features) {
         Constants.setExitOnFail(false);
 
-        JsonObject errorMessage = ParameterParser.validateFeaturesToAdd(features);
-        if (errorMessage != null) {
-            return errorMessage;
+        if (!ParameterParser.isFeaturesToAddWithSuffixValid(features) || !ParameterParser.isFeaturesToAddValid(features)) {
+            return ParameterParser.errorJson(features);
         }
 
         Map<String, String> featuresMap = ParameterParser.extractFeatureToAdd(features);
