@@ -19,8 +19,6 @@ import delfos.web.database.ParameterParser;
 import delfos.web.json.FeatureJson;
 import delfos.web.json.ItemJson;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.ws.rs.GET;
@@ -39,14 +37,14 @@ public class AddItemFeatures {
 
     @Path("{idItem}/{features}")
     @GET
-    public String getAsPlain(@PathParam(ItemJson.ID_ITEM) int idItem, @PathParam(FeatureJson.FEATURES) String features) {
+    public String getAsPlain(@PathParam(ItemJson.ID_ITEM) int idItem, @PathParam(FeatureJson.FEATURES) String features) throws CommandLineParametersError {
         return getAsJson(idItem, features).toString();
     }
 
     @Path("{idItem}/{features}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getAsJson(@PathParam(ItemJson.ID_ITEM) int idItem, @PathParam(FeatureJson.FEATURES) String features) {
+    public JsonObject getAsJson(@PathParam(ItemJson.ID_ITEM) int idItem, @PathParam(FeatureJson.FEATURES) String features) throws CommandLineParametersError {
         Constants.setExitOnFail(false);
 
         if (!ParameterParser.isFeaturesToAddWithSuffixValid(features) || !ParameterParser.isFeaturesToAddValid(features)) {
@@ -57,43 +55,33 @@ public class AddItemFeatures {
         String newName = ParameterParser.extractNewName(features);
 
         ChangeableDatasetLoader changeableDatasetLoader;
+
+        ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
+                DatabaseManager.MODE_PARAMETER,
+                DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE);
+
+        DatasetLoader datasetLoader = DatabaseManager.extractDatasetHandler(consoleParameters);
+        changeableDatasetLoader = DatabaseCaseUseSubManager.viewDatasetLoaderAsChangeable(datasetLoader);
+
         try {
-            ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
-                    DatabaseManager.MODE_PARAMETER,
-                    DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE);
+            Item item = changeableDatasetLoader.getChangeableContentDataset().getItem(idItem);
+            delfos.main.managers.database.submanagers.AddItemFeatures.getInstance()
+                    .addItemFeatures(
+                            changeableDatasetLoader, item, newName, featuresMap
+                    );
 
-            DatasetLoader datasetLoader = DatabaseManager.extractDatasetHandler(consoleParameters);
-            changeableDatasetLoader = DatabaseCaseUseSubManager.viewDatasetLoaderAsChangeable(datasetLoader);
-
-        } catch (CommandLineParametersError ex) {
-            Logger.getLogger(AddItemFeatures.class.getName()).log(Level.SEVERE, null, ex);
+            changeableDatasetLoader.commitChangesInPersistence();
+            item = changeableDatasetLoader.getChangeableContentDataset().get(idItem);
             return Json.createObjectBuilder()
-                    .add("status", "error")
-                    .add("message", "Malformed command line parameters")
-                    .add(ItemJson.ID_ITEM, idItem).build();
-        }
-
-        Item item;
-        try {
-            item = changeableDatasetLoader.getChangeableContentDataset().getItem(idItem);
+                    .add("status", "ok")
+                    .add("item", ItemJson.createWithFeatures(item))
+                    .build();
         } catch (ItemNotFound ex) {
             return Json.createObjectBuilder()
                     .add("status", "error")
-                    .add("message", "Item not exists")
-                    .add(ItemJson.ID_ITEM, idItem).build();
+                    .add("message", "Item not found")
+                    .build();
         }
-
-        delfos.main.managers.database.submanagers.AddItemFeatures.getInstance()
-                .addItemFeatures(
-                        changeableDatasetLoader, item, newName, featuresMap
-                );
-
-        changeableDatasetLoader.commitChangesInPersistence();
-        item = changeableDatasetLoader.getChangeableContentDataset().get(idItem);
-        return Json.createObjectBuilder()
-                .add("status", "ok")
-                .add("item", ItemJson.createWithFeatures(item))
-                .build();
 
     }
 }

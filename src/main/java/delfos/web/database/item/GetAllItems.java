@@ -13,10 +13,7 @@ import delfos.dataset.basic.loader.types.DatasetLoader;
 import delfos.main.managers.database.DatabaseManager;
 import static delfos.web.Configuration.DATABASE_CONFIG_FILE;
 import delfos.web.json.ItemJson;
-import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -35,13 +32,13 @@ import javax.ws.rs.core.MediaType;
 public class GetAllItems {
 
     @GET
-    public String getAsText() {
+    public String getAsText() throws CommandLineParametersError {
         return getAsJson().toString();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getAsJson() {
+    public JsonObject getAsJson() throws CommandLineParametersError {
         Constants.setExitOnFail(false);
 
         List<Item> itemSet = getItemSet();
@@ -54,18 +51,14 @@ public class GetAllItems {
                 .build();
     }
 
-    public List<Item> getItemSet() {
-        try {
-            ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
-                    DatabaseManager.MODE_PARAMETER,
-                    DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE);
+    public List<Item> getItemSet() throws CommandLineParametersError {
 
-            DatasetLoader datasetHandler = DatabaseManager.extractDatasetHandler(consoleParameters);
+        ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
+                DatabaseManager.MODE_PARAMETER,
+                DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE);
 
-            return datasetHandler.getContentDataset().stream().sorted().collect(Collectors.toList());
-        } catch (CommandLineParametersError ex) {
-            Logger.getLogger(GetAllItems.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return Collections.EMPTY_LIST;
+        DatasetLoader datasetHandler = DatabaseManager.extractDatasetHandler(consoleParameters);
+
+        return datasetHandler.getContentDataset().stream().sorted().collect(Collectors.toList());
     }
 }

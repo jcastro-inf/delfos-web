@@ -55,11 +55,7 @@ public class AddItem {
 
         } catch (CommandLineParametersError ex) {
             Logger.getLogger(AddItem.class.getName()).log(Level.SEVERE, null, ex);
-            return Json.createObjectBuilder()
-                    .add("status", "error")
-                    .add("message", "Malformed command line parameters")
-                    .add(ItemJson.ID_ITEM, idItem)
-                    .build().toString();
+            throw new IllegalStateException(ex);
 
         }
 

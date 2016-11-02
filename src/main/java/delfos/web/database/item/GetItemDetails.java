@@ -14,8 +14,6 @@ import delfos.dataset.basic.loader.types.DatasetLoader;
 import delfos.main.managers.database.DatabaseManager;
 import static delfos.web.Configuration.DATABASE_CONFIG_FILE;
 import delfos.web.json.ItemJson;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.ws.rs.GET;
@@ -34,45 +32,35 @@ public class GetItemDetails {
 
     @Path("{" + ItemJson.ID_ITEM + "}")
     @GET
-    public String getAsPlain(@PathParam(ItemJson.ID_ITEM) int idItem) {
+    public String getAsPlain(@PathParam(ItemJson.ID_ITEM) int idItem) throws CommandLineParametersError {
         return getAsJson(idItem).toString();
     }
 
     @Path("{" + ItemJson.ID_ITEM + "}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getAsJson(@PathParam(ItemJson.ID_ITEM) int idItem) {
+    public JsonObject getAsJson(@PathParam(ItemJson.ID_ITEM) int idItem) throws CommandLineParametersError {
         Constants.setExitOnFail(false);
 
         DatasetLoader datasetLoader;
+
+        ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
+                DatabaseManager.MODE_PARAMETER,
+                DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE);
+
+        datasetLoader = DatabaseManager.extractDatasetHandler(consoleParameters);
+
         try {
-            ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
-                    DatabaseManager.MODE_PARAMETER,
-                    DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE);
-
-            datasetLoader = DatabaseManager.extractDatasetHandler(consoleParameters);
-
-        } catch (CommandLineParametersError ex) {
-            Logger.getLogger(GetItemDetails.class.getName()).log(Level.SEVERE, null, ex);
+            Item item = datasetLoader.getContentDataset().getItem(idItem);
             return Json.createObjectBuilder()
-                    .add("status", "error")
-                    .add("message", "Malformed command line parameters")
-                    .add(ItemJson.ID_ITEM, idItem).build();
-        }
-
-        Item item;
-        try {
-            item = datasetLoader.getContentDataset().getItem(idItem);
-            return Json.createObjectBuilder()
-                    .add("status", "ok")
                     .add("message", "item with id " + idItem)
                     .add(ItemJson.ITEM, ItemJson.createWithFeatures(item))
                     .build();
         } catch (ItemNotFound ex) {
             return Json.createObjectBuilder()
-                    .add("status", "ok")
-                    .add("message", "item with id " + idItem + " not found")
-                    .add(ItemJson.ID_ITEM, idItem).build();
+                    .add("status", "error")
+                    .add("message", "Item not found")
+                    .build();
         }
 
     }

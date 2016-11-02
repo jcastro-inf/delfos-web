@@ -15,8 +15,6 @@ import static delfos.web.Configuration.DATABASE_CONFIG_FILE;
 import delfos.web.json.FeatureJson;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -37,31 +35,23 @@ public class GetUsedValuesOfItemFeature {
 
     @Path("{" + FeatureJson.FEATURE_NAME + "}")
     @GET
-    public String getAsPlain(@PathParam(FeatureJson.FEATURE_NAME) String featureName) {
+    public String getAsPlain(@PathParam(FeatureJson.FEATURE_NAME) String featureName) throws CommandLineParametersError {
         return getAsJson(featureName).toString();
     }
 
     @Path("{" + FeatureJson.FEATURE_NAME + "}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getAsJson(@PathParam(FeatureJson.FEATURE_NAME) String featureName) {
+    public JsonObject getAsJson(@PathParam(FeatureJson.FEATURE_NAME) String featureName) throws CommandLineParametersError {
         Constants.setExitOnFail(false);
 
         DatasetLoader datasetLoader;
-        try {
-            ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
-                    DatabaseManager.MODE_PARAMETER,
-                    DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE);
 
-            datasetLoader = DatabaseManager.extractDatasetHandler(consoleParameters);
+        ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
+                DatabaseManager.MODE_PARAMETER,
+                DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE);
 
-        } catch (CommandLineParametersError ex) {
-            Logger.getLogger(GetUsedValuesOfItemFeature.class.getName()).log(Level.SEVERE, null, ex);
-            return Json.createObjectBuilder()
-                    .add("status", "error")
-                    .add("message", "Malformed command line parameters")
-                    .add(FeatureJson.FEATURE_NAME, featureName).build();
-        }
+        datasetLoader = DatabaseManager.extractDatasetHandler(consoleParameters);
 
         List<Feature> featuresMatched = Arrays.asList(datasetLoader.getContentDataset().getFeatures())
                 .parallelStream()

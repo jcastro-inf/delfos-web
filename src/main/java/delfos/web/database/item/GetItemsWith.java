@@ -20,8 +20,6 @@ import delfos.web.json.ItemJson;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.json.Json;
@@ -58,33 +56,23 @@ public class GetItemsWith {
 
     @Path("{features}")
     @GET
-    public String getAsPlain(@PathParam("features") String features) {
+    public String getAsPlain(@PathParam("features") String features) throws CommandLineParametersError {
         return getAsJson(features).toString();
     }
 
     @Path("{features}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getAsJson(@PathParam("features") String features) {
+    public JsonObject getAsJson(@PathParam("features") String features) throws CommandLineParametersError {
         Constants.setExitOnFail(false);
 
         DatasetLoader datasetLoader;
-        try {
-            ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
-                    DatabaseManager.MODE_PARAMETER,
-                    DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE);
 
-            datasetLoader = DatabaseManager.extractDatasetHandler(consoleParameters);
+        ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
+                DatabaseManager.MODE_PARAMETER,
+                DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE);
 
-        } catch (CommandLineParametersError ex) {
-            Logger.getLogger(GetItemsWith.class.getName()).log(Level.SEVERE, null, ex);
-            return Json.createObjectBuilder()
-                    .add("status", "error")
-                    .add("message", "Malformed command line parameters")
-                    .add("info", "Expected format: (featureName=value([,featureName=value])*")
-                    .add("query", "requested items with'" + features + "'")
-                    .build();
-        }
+        datasetLoader = DatabaseManager.extractDatasetHandler(consoleParameters);
 
         Stream<Item> candidateItems = datasetLoader.getContentDataset().parallelStream();
 
@@ -112,7 +100,6 @@ public class GetItemsWith {
         items.forEach(item -> itemsArrayJson.add(ItemJson.create(item)));
 
         return Json.createObjectBuilder()
-                .add("status", "ok")
                 .add("message", "requested items with'" + features + "'")
                 .add("query", "requested items with'" + features + "'")
                 .add("numItems", items.size())
