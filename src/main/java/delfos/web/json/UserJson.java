@@ -19,13 +19,8 @@ import javax.json.JsonObjectBuilder;
  */
 public class UserJson {
 
-    public static final String ID_USER = "id";
+    public static final String ID_USER = "idUser";
     public static final String USER_NAME = "name";
-    public static final String FEATURE = "feature";
-    public static final String FEATURES = "features";
-    public static final String FEATURE_NAME = "name";
-    public static final String FEATURE_TYPE = "type";
-    public static final String FEATURE_VALUE = "value";
 
     public static JsonObject create(User user) {
         JsonObjectBuilder userJson = Json.createObjectBuilder();
@@ -39,7 +34,7 @@ public class UserJson {
         JsonObjectBuilder userJson = Json.createObjectBuilder();
         userJson.add(USER_NAME, user.getName());
         userJson.add(ID_USER, user.getId());
-        userJson.add(FEATURES, FeatureJson.createFeaturesJson(user));
+        userJson.add(FeatureJson.FEATURES, FeatureJson.createFeaturesJson(user));
 
         return userJson.build();
     }

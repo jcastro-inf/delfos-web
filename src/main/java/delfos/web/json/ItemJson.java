@@ -19,7 +19,7 @@ import javax.json.JsonObjectBuilder;
  */
 public class ItemJson {
 
-    public static final String ID_ITEM = "id";
+    public static final String ID_ITEM = "idItem";
     public static final String ITEM_NAME = "name";
     public static final String ITEM = "item";
 

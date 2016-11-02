@@ -20,8 +20,8 @@ import delfos.main.managers.recommendation.singleuser.SingleUserRecommendation;
 import delfos.rs.recommendation.RecommendationsToUser;
 import delfos.web.Configuration;
 import delfos.web.database.user.AddUserFeatures;
-import static delfos.web.database.user.AddUserFeatures.IDUSER;
 import delfos.web.json.RecommendationsJson;
+import delfos.web.json.UserJson;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,16 +80,16 @@ public class RecommendToIndividual {
 
     }
 
-    @Path("Recommend/{idUser}")
+    @Path("Recommend/{" + UserJson.ID_USER + "}")
     @GET
-    public String recommendToIndividual_asText(@PathParam("idUser") int idUser) {
+    public String recommendToIndividual_asText(@PathParam(UserJson.ID_USER) int idUser) {
         return recommendToIndividual_asJson(idUser).toString();
     }
 
-    @Path("Recommend/{idUser}")
+    @Path("Recommend/{" + UserJson.ID_USER + "}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonValue recommendToIndividual_asJson(@PathParam("idUser") int idUser) {
+    public JsonValue recommendToIndividual_asJson(@PathParam(UserJson.ID_USER) int idUser) {
         Constants.setExitOnFail(false);
 
         RecommenderSystemConfiguration rsc;
@@ -99,7 +99,7 @@ public class RecommendToIndividual {
             return Json.createObjectBuilder()
                     .add("status", "error")
                     .add("message", ex.getMessage())
-                    .add(IDUSER, idUser).build();
+                    .add(UserJson.ID_USER, idUser).build();
         }
         User user;
         try {
@@ -108,7 +108,7 @@ public class RecommendToIndividual {
             return Json.createObjectBuilder()
                     .add("status", "error")
                     .add("message", "User not exists")
-                    .add(IDUSER, idUser).build();
+                    .add(UserJson.ID_USER, idUser).build();
         }
 
         RecommendationsToUser recommendToUser = Recommend.recommendToUser(rsc, user);

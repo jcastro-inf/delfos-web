@@ -32,13 +32,13 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.TEXT_PLAIN)
 public class AddItem {
 
-    @Path("{idItem}")
+    @Path("{" + ItemJson.ID_ITEM + "}")
     @GET
     public String getAsText(@PathParam(ItemJson.ID_ITEM) int idItem) {
         return getAsJSon(idItem);
     }
 
-    @Path("{idItem}")
+    @Path("{" + ItemJson.ID_ITEM + "}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getAsJSon(@PathParam(ItemJson.ID_ITEM) int idItem) {

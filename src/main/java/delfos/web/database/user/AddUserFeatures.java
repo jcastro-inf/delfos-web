@@ -16,7 +16,7 @@ import delfos.main.managers.database.DatabaseManager;
 import delfos.main.managers.database.submanagers.DatabaseCaseUseSubManager;
 import static delfos.web.Configuration.DATABASE_CONFIG_FILE;
 import delfos.web.database.ParameterParser;
-import static delfos.web.database.user.AddUserFeatures.IDUSER;
+import delfos.web.json.FeatureJson;
 import delfos.web.json.UserJson;
 import java.util.Map;
 import java.util.logging.Level;
@@ -37,19 +37,17 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.TEXT_PLAIN)
 public class AddUserFeatures {
 
-    public static final String IDUSER = AddUser.IDUSER;
-
-    @Path("{idUser}/{features}")
+    @Path("{" + UserJson.ID_USER + "}/{" + FeatureJson.FEATURES + "}")
     @GET
-    public String getAsText(@PathParam("idUser") int idUser, @PathParam("features") String features) {
+    public String getAsText(@PathParam(UserJson.ID_USER) int id, @PathParam(FeatureJson.FEATURES) String features) {
 
-        return getAsJson(idUser, features).toString();
+        return getAsJson(id, features).toString();
     }
 
-    @Path("{idUser}/{features}")
+    @Path("{" + UserJson.ID_USER + "}/{" + FeatureJson.FEATURES + "}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getAsJson(@PathParam("idUser") int idUser, @PathParam("features") String features) {
+    public JsonObject getAsJson(@PathParam(UserJson.ID_USER) int id, @PathParam(FeatureJson.FEATURES) String features) {
         Constants.setExitOnFail(false);
 
         if (!ParameterParser.isFeaturesToAddWithSuffixValid(features) || !ParameterParser.isFeaturesToAddValid(features)) {
@@ -73,17 +71,17 @@ public class AddUserFeatures {
             return Json.createObjectBuilder()
                     .add("status", "error")
                     .add("message", "Malformed command line parameters")
-                    .add(IDUSER, idUser).build();
+                    .add(UserJson.ID_USER, id).build();
         }
 
         User user;
         try {
-            user = changeableDatasetLoader.getChangeableUsersDataset().getUser(idUser);
+            user = changeableDatasetLoader.getChangeableUsersDataset().getUser(id);
         } catch (UserNotFound ex) {
             return Json.createObjectBuilder()
                     .add("status", "error")
                     .add("message", "User not exists")
-                    .add(IDUSER, idUser).build();
+                    .add(UserJson.ID_USER, id).build();
         }
 
         delfos.main.managers.database.submanagers.AddUserFeatures.getInstance()
@@ -92,7 +90,7 @@ public class AddUserFeatures {
                 );
 
         changeableDatasetLoader.commitChangesInPersistence();
-        user = changeableDatasetLoader.getChangeableUsersDataset().get(idUser);
+        user = changeableDatasetLoader.getChangeableUsersDataset().get(id);
         return Json.createObjectBuilder()
                 .add("status", "ok")
                 .add("user", UserJson.createWithFeatures(user))
