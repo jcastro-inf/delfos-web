@@ -56,16 +56,16 @@ public class GetItemsWith {
                 .build();
     }
 
-    @Path("{featuresToHave}")
+    @Path("{features}")
     @GET
-    public String getAsPlain(@PathParam("featuresToHave") String featuresToHave) {
-        return getAsJson(featuresToHave).toString();
+    public String getAsPlain(@PathParam("features") String features) {
+        return getAsJson(features).toString();
     }
 
-    @Path("{featuresToHave}")
+    @Path("{features}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getAsJson(@PathParam("featuresToHave") String featuresToHave) {
+    public JsonObject getAsJson(@PathParam("features") String features) {
         Constants.setExitOnFail(false);
 
         DatasetLoader datasetLoader;
@@ -82,19 +82,20 @@ public class GetItemsWith {
                     .add("status", "error")
                     .add("message", "Malformed command line parameters")
                     .add("info", "Expected format: (featureName=value([,featureName=value])*")
-                    .add("featuresToHave", featuresToHave).build();
+                    .add("query", "requested items with'" + features + "'")
+                    .build();
         }
 
         Stream<Item> candidateItems = datasetLoader.getContentDataset().parallelStream();
 
-        Map<String, String> featuresToHaveMap = ParameterParser.extractFeatureToAdd(featuresToHave);
+        Map<String, String> featuresMap = ParameterParser.extractFeatureToAdd(features);
 
-        String name = ParameterParser.extractNewName(featuresToHave);
+        String name = ParameterParser.extractNewName(features);
         if (name != null) {
             candidateItems = filterContainingNameIgnoreCase(candidateItems, name);
         }
 
-        for (Map.Entry<String, String> entry : featuresToHaveMap.entrySet()) {
+        for (Map.Entry<String, String> entry : featuresMap.entrySet()) {
 
             Feature feature = Arrays.asList(datasetLoader.getContentDataset().getFeatures()).parallelStream()
                     .filter(featureInner -> featureInner.getName().equals(entry.getKey()))
@@ -112,7 +113,8 @@ public class GetItemsWith {
 
         return Json.createObjectBuilder()
                 .add("status", "ok")
-                .add("message", "requested items with'" + featuresToHave + "'")
+                .add("message", "requested items with'" + features + "'")
+                .add("query", "requested items with'" + features + "'")
                 .add("numItems", items.size())
                 .add("items", itemsArrayJson)
                 .build();

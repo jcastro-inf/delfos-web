@@ -37,25 +37,25 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.TEXT_PLAIN)
 public class AddItemFeatures {
 
-    @Path("{idItem}/{featuresToAdd}")
+    @Path("{idItem}/{features}")
     @GET
-    public String getAsPlain(@PathParam(ItemJson.ID_ITEM) int idItem, @PathParam(FeatureJson.FEATURES) String featuresToAdd) {
-        return getAsJson(idItem, featuresToAdd).toString();
+    public String getAsPlain(@PathParam(ItemJson.ID_ITEM) int idItem, @PathParam(FeatureJson.FEATURES) String features) {
+        return getAsJson(idItem, features).toString();
     }
 
-    @Path("{idItem}/{featuresToAdd}")
+    @Path("{idItem}/{features}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getAsJson(@PathParam(ItemJson.ID_ITEM) int idItem, @PathParam(FeatureJson.FEATURES) String featuresToAdd) {
+    public JsonObject getAsJson(@PathParam(ItemJson.ID_ITEM) int idItem, @PathParam(FeatureJson.FEATURES) String features) {
         Constants.setExitOnFail(false);
 
-        JsonObject errorMessage = ParameterParser.validateFeaturesToAdd(featuresToAdd);
+        JsonObject errorMessage = ParameterParser.validateFeaturesToAdd(features);
         if (errorMessage != null) {
             return errorMessage;
         }
 
-        Map<String, String> featuresToAddMap = ParameterParser.extractFeatureToAdd(featuresToAdd);
-        String newName = ParameterParser.extractNewName(featuresToAdd);
+        Map<String, String> featuresMap = ParameterParser.extractFeatureToAdd(features);
+        String newName = ParameterParser.extractNewName(features);
 
         ChangeableDatasetLoader changeableDatasetLoader;
         try {
@@ -86,7 +86,7 @@ public class AddItemFeatures {
 
         delfos.main.managers.database.submanagers.AddItemFeatures.getInstance()
                 .addItemFeatures(
-                        changeableDatasetLoader, item, newName, featuresToAddMap
+                        changeableDatasetLoader, item, newName, featuresMap
                 );
 
         changeableDatasetLoader.commitChangesInPersistence();
