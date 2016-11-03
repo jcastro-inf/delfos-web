@@ -21,6 +21,7 @@ public class UserJson {
 
     public static final String ID_USER = "idUser";
     public static final String USER_NAME = "name";
+    public static String USER = "user";
 
     public static JsonObject create(User user) {
         JsonObjectBuilder userJson = Json.createObjectBuilder();
