@@ -3,6 +3,10 @@
     Created on : 03/11/2016, 8:44:57 AM
     Author     : jcastro
 --%>
+<%@page import="delfos.web.database.ratings.GetRatingsOfItem"%>
+<%@page import="delfos.web.database.ratings.GetRatingsOfUser"%>
+<%@page import="delfos.web.database.ratings.GetAllRatings"%>
+<%@page import="delfos.web.database.ratings.AddRating"%>
 <%@page import="delfos.web.database.user.*"%>
 <%@page import="delfos.web.database.item.*"%>
 <%@page import="delfos.CommandLineParametersError"%>
@@ -166,6 +170,45 @@
                     <td>Retrieves and returns all users in the database (id,name)</td>
                     <td>none</td>
                     <td> <a href="./webresources/Database/GetUsedValuesOfUserFeature/year">link</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <h2>Ratings</h2>
+        <table cellpadding="1">
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Description</th>
+                    <th>Parameters</th>
+                    <th>Resource</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><%= isWritable ? "" : "<strike>"%><%=AddRating.class.getSimpleName()%><%= isWritable ? "" : "</strike>"%></td>
+                    <td>Adds one rating to the database</td>
+                    <td>idUser,idItem,ratingValue</td>
+                    <td><%= isWritable ? "" : "<strike>"%><a href="./webresources/Database/AddRating/1/1/5">link</a><%= isWritable ? "" : "</strike>"%></td>
+                </tr>
+                <tr>
+                    <td><%=GetAllRatings.class.getSimpleName()%></td>
+                    <td>Returns all ratings in the database (limited to <%=GetAllRatings.LIMIT%> ratings)</td>
+                    <td>none</td>
+                    <td><a href="./webresources/Database/GetAllRatings">link</a></td>
+                </tr>
+                <tr>
+                    <td><%=GetRatingsOfUser.class.getSimpleName()%></td>
+                    <td>Returns the ratings of specified user</td>
+                    <td>idUser</td>
+                    <td><a href="./webresources/Database/GetRatingsOfUser">link</a></td>
+                </tr>
+                <tr>
+                    <td><%=GetRatingsOfItem.class.getSimpleName()%></td>
+                    <td>Returns the ratings of specified item</td>
+                    <td>idItem</td>
+                    <td><a href="./webresources/Database/GetRatingsOfItem">link</a></td>
                 </tr>
             </tbody>
         </table>

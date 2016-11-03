@@ -32,7 +32,7 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.TEXT_PLAIN)
 public class GetAllRatings {
 
-    public final int LIMIT = 10000;
+    public static final int LIMIT = 10000;
 
     @GET
     public String getAsText() throws CommandLineParametersError {
