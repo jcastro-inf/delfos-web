@@ -36,8 +36,8 @@ public class RatingJson {
     public static JsonObject getRatingJson(Rating rating) {
         return Json.createObjectBuilder()
                 .add(UserJson.ID_USER, rating.getIdUser())
-                .add(ItemJson.ID_ITEM, rating.getIdUser())
-                .add(RatingJson.RATING_VALUE, rating.getIdUser())
+                .add(ItemJson.ID_ITEM, rating.getIdItem())
+                .add(RatingJson.RATING_VALUE, rating.getRatingValue().doubleValue())
                 .build();
     }
 
