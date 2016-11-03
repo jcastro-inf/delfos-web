@@ -202,13 +202,13 @@
                     <td><%=GetRatingsOfUser.class.getSimpleName()%></td>
                     <td>Returns the ratings of specified user</td>
                     <td>idUser</td>
-                    <td><a href="./webresources/Database/GetRatingsOfUser">link</a></td>
+                    <td><a href="./webresources/Database/GetRatingsOfUser/1">link</a></td>
                 </tr>
                 <tr>
                     <td><%=GetRatingsOfItem.class.getSimpleName()%></td>
                     <td>Returns the ratings of specified item</td>
                     <td>idItem</td>
-                    <td><a href="./webresources/Database/GetRatingsOfItem">link</a></td>
+                    <td><a href="./webresources/Database/GetRatingsOfItem/1">link</a></td>
                 </tr>
             </tbody>
         </table>
