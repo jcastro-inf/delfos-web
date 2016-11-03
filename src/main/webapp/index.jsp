@@ -3,6 +3,7 @@
     Created on : 03/11/2016, 8:44:57 AM
     Author     : jcastro
 --%>
+<%@page import="delfos.web.Index"%>
 <%@page import="delfos.web.database.ratings.GetRatingsOfItem"%>
 <%@page import="delfos.web.database.ratings.GetRatingsOfUser"%>
 <%@page import="delfos.web.database.ratings.GetAllRatings"%>
@@ -23,6 +24,9 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <style>
+            table{
+                width: 100%;
+            }
             table, th, td {
                 border: 1px solid black;
                 border-collapse: collapse;
@@ -63,6 +67,7 @@
 
         <h2>Items</h2>
         <table cellpadding="1">
+            <%=Index.getColWidths()%>
             <thead>
                 <tr>
                     <th>Method</th>
@@ -88,31 +93,31 @@
                     <td><%=GetAllItems.class.getSimpleName()%></td>
                     <td>Returns all items in the database (id,name)</td>
                     <td>none</td>
-                    <td> <a href="./webresources/Database/GetAllItems">link</a></td>
+                    <td><a href="./webresources/Database/GetAllItems">link</a></td>
                 </tr>
                 <tr>
                     <td><%=GetFeaturesOfAllItems.class.getSimpleName()%></td>
                     <td>Returns all features defined for items</td>
                     <td>none</td>
-                    <td> <a href="./webresources/Database/GetFeaturesOfAllItems">link</a></td>
+                    <td><a href="./webresources/Database/GetFeaturesOfAllItems">link</a></td>
                 </tr>
                 <tr>
                     <td><%=GetItemDetails.class.getSimpleName()%></td>
                     <td>Retrieves all details of item with the specified <b>id</b></td>
                     <td>id</td>
-                    <td> <a href="./webresources/Database/GetItemDetails/1">link</a></td>
+                    <td><a href="./webresources/Database/GetItemDetails/1">link</a></td>
                 </tr>
                 <tr>
                     <td><%=GetItemsWith.class.getSimpleName()%></td>
                     <td>Returns all items with the specified parameter values</td>
                     <td>features</td>
-                    <td> <a href="./webresources/Database/GetItemsWith/year=1990,Drama=1">link</a></td>
+                    <td><a href="./webresources/Database/GetItemsWith/year=1990,Drama=1">link</a></td>
                 </tr>
                 <tr>
                     <td><%=GetUsedValuesOfItemFeature.class.getSimpleName()%></td>
                     <td>Retrieves and returns all items in the database (id,name)</td>
                     <td>none</td>
-                    <td> <a href="./webresources/Database/GetUsedValuesOfItemFeature/year">link</a></td>
+                    <td><a href="./webresources/Database/GetUsedValuesOfItemFeature/year">link</a></td>
                 </tr>
             </tbody>
         </table>
@@ -120,6 +125,7 @@
 
         <h2>Users</h2>
         <table cellpadding="1">
+            <%=Index.getColWidths()%>
             <thead>
                 <tr>
                     <th>Method</th>
@@ -145,31 +151,31 @@
                     <td><%=GetAllUsers.class.getSimpleName()%></td>
                     <td>Returns all users in the database (id,name)</td>
                     <td>none</td>
-                    <td> <a href="./webresources/Database/GetAllUsers">link</a></td>
+                    <td><a href="./webresources/Database/GetAllUsers">link</a></td>
                 </tr>
                 <tr>
                     <td><%=GetFeaturesOfAllUsers.class.getSimpleName()%></td>
                     <td>Returns all features defined for users</td>
                     <td>none</td>
-                    <td> <a href="./webresources/Database/GetFeaturesOfAllUsers">link</a></td>
+                    <td><a href="./webresources/Database/GetFeaturesOfAllUsers">link</a></td>
                 </tr>
                 <tr>
                     <td><%=GetUserDetails.class.getSimpleName()%></td>
                     <td>Retrieves all details of user with the specified <b>id</b></td>
                     <td>id</td>
-                    <td> <a href="./webresources/Database/GetUserDetails/1">link</a></td>
+                    <td><a href="./webresources/Database/GetUserDetails/1">link</a></td>
                 </tr>
                 <tr>
                     <td><%=GetUsersWith.class.getSimpleName()%></td>
                     <td>Returns all users with the specified parameter values</td>
                     <td>features</td>
-                    <td> <a href="./webresources/Database/GetUsersWith/year=1990,Drama=1">link</a></td>
+                    <td><a href="./webresources/Database/GetUsersWith/year=1990,Drama=1">link</a></td>
                 </tr>
                 <tr>
                     <td><%=GetUsedValuesOfUserFeature.class.getSimpleName()%></td>
                     <td>Retrieves and returns all users in the database (id,name)</td>
                     <td>none</td>
-                    <td> <a href="./webresources/Database/GetUsedValuesOfUserFeature/year">link</a></td>
+                    <td><a href="./webresources/Database/GetUsedValuesOfUserFeature/year">link</a></td>
                 </tr>
             </tbody>
         </table>
@@ -177,6 +183,7 @@
 
         <h2>Ratings</h2>
         <table cellpadding="1">
+            <%=Index.getColWidths()%>
             <thead>
                 <tr>
                     <th>Method</th>
