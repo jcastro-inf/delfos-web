@@ -11,7 +11,7 @@ import delfos.Constants;
 import delfos.dataset.basic.loader.types.DatasetLoader;
 import delfos.dataset.basic.rating.Rating;
 import delfos.main.managers.database.DatabaseManager;
-import delfos.web.Configuration;
+import delfos.web.DelfosWebConfiguration;
 import delfos.web.json.RatingJson;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,10 +44,10 @@ public class GetAllRatings {
     public JsonValue getAsJson() throws CommandLineParametersError {
         Constants.setExitOnFail(false);
 
-        ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
-                DatabaseManager.MODE_PARAMETER,
+        ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(DatabaseManager.MODE_PARAMETER,
                 DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML,
-                Configuration.DATABASE_CONFIG_FILE);
+                DelfosWebConfiguration.DATABASE_CONFIG_FILE,
+                Constants.LIBRARY_CONFIGURATION_DIRECTORY, DelfosWebConfiguration.LIBRARY_CONFIGURATION_DIRECTORY);
 
         DatasetLoader<? extends Rating> datasetLoader = DatabaseManager.extractDatasetHandler(consoleParameters);
 

@@ -12,7 +12,8 @@ import delfos.common.exceptions.dataset.users.UserNotFound;
 import delfos.dataset.basic.loader.types.DatasetLoader;
 import delfos.dataset.basic.user.User;
 import delfos.main.managers.database.DatabaseManager;
-import static delfos.web.Configuration.DATABASE_CONFIG_FILE;
+import delfos.web.DelfosWebConfiguration;
+import static delfos.web.DelfosWebConfiguration.DATABASE_CONFIG_FILE;
 import delfos.web.json.UserJson;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -44,9 +45,9 @@ public class GetUserDetails {
 
         DatasetLoader datasetLoader;
 
-        ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
-                DatabaseManager.MODE_PARAMETER,
-                DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE);
+        ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(DatabaseManager.MODE_PARAMETER,
+                DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE,
+                Constants.LIBRARY_CONFIGURATION_DIRECTORY, DelfosWebConfiguration.LIBRARY_CONFIGURATION_DIRECTORY);
 
         datasetLoader = DatabaseManager.extractDatasetHandler(consoleParameters);
 

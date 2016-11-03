@@ -17,7 +17,7 @@ import delfos.main.managers.recommendation.ArgumentsRecommendation;
 import delfos.main.managers.recommendation.nonpersonalised.NonPersonalisedRecommendation;
 import delfos.main.managers.recommendation.nonpersonalised.Recommend;
 import delfos.rs.recommendation.RecommendationsToUser;
-import delfos.web.Configuration;
+import delfos.web.DelfosWebConfiguration;
 import delfos.web.json.RecommendationsJson;
 import javax.json.Json;
 import javax.json.JsonValue;
@@ -48,9 +48,9 @@ public class RecommendNonPersonalised {
 
         String[] arguments = new String[]{
             NonPersonalisedRecommendation.NON_PERSONALISED_MODE,
-            ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, Configuration.NON_PERSONALISED_CONFIG_FILE,
+            ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, DelfosWebConfiguration.NON_PERSONALISED_CONFIG_FILE,
             ArgumentsRecommendation.BUILD_RECOMMENDATION_MODEL,
-            Constants.LIBRARY_CONFIGURATION_DIRECTORY, Configuration.LIBRARY_CONFIGURATION_DIRECTORY
+            Constants.LIBRARY_CONFIGURATION_DIRECTORY, DelfosWebConfiguration.LIBRARY_CONFIGURATION_DIRECTORY
         };
 
         Chronometer chronometer = new Chronometer();
@@ -79,7 +79,7 @@ public class RecommendNonPersonalised {
         Constants.setExitOnFail(false);
 
         RecommenderSystemConfiguration rsc = RecommenderSystemConfigurationFileParser
-                .loadConfigFile(Configuration.NON_PERSONALISED_CONFIG_FILE);
+                .loadConfigFile(DelfosWebConfiguration.NON_PERSONALISED_CONFIG_FILE);
 
         User user = User.ANONYMOUS_USER;
 

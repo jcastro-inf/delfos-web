@@ -3,6 +3,7 @@
     Created on : 03/11/2016, 8:44:57 AM
     Author     : jcastro
 --%>
+<%@page import="delfos.web.DelfosWebConfiguration"%>
 <%@page import="delfos.configureddatasets.ConfiguredDatasetsFactory"%>
 <%@page import="delfos.web.Index"%>
 <%@page import="delfos.web.database.ratings.GetRatingsOfItem"%>
@@ -49,19 +50,14 @@
             boolean isWritable;
             DatasetLoader datasetLoader;
 
-            try {
-                ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
-                        DatabaseManager.MODE_PARAMETER,
-                        DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, delfos.web.Configuration.DATABASE_CONFIG_FILE);
+            ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
+                    DatabaseManager.MODE_PARAMETER,
+                    DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DelfosWebConfiguration.DATABASE_CONFIG_FILE,
+                    Constants.LIBRARY_CONFIGURATION_DIRECTORY, DelfosWebConfiguration.LIBRARY_CONFIGURATION_DIRECTORY
+            );
 
-                datasetLoader = DatabaseManager.extractDatasetHandler(consoleParameters);
-                isWritable = DatabaseCaseUseSubManager.isDatasetLoaderChangeable(datasetLoader);
-            } catch (Exception ex) {
-                isWritable = false;
-                datasetLoader = ConfiguredDatasetsFactory.getInstance().getDatasetLoader("ml-100k");
-            }
-
-
+            datasetLoader = DatabaseManager.extractDatasetHandler(consoleParameters);
+            isWritable = DatabaseCaseUseSubManager.isDatasetLoaderChangeable(datasetLoader);
         %>
 
 

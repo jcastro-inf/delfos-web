@@ -18,7 +18,7 @@ import delfos.main.managers.recommendation.ArgumentsRecommendation;
 import delfos.main.managers.recommendation.singleuser.Recommend;
 import delfos.main.managers.recommendation.singleuser.SingleUserRecommendation;
 import delfos.rs.recommendation.RecommendationsToUser;
-import delfos.web.Configuration;
+import delfos.web.DelfosWebConfiguration;
 import delfos.web.json.RecommendationsJson;
 import delfos.web.json.UserJson;
 import javax.json.Json;
@@ -51,8 +51,9 @@ public class RecommendToIndividual {
 
         String[] arguments = new String[]{
             SingleUserRecommendation.SINGLE_USER_MODE,
-            ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, Configuration.RS_CONFIG_FILE,
-            ArgumentsRecommendation.BUILD_RECOMMENDATION_MODEL
+            ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, DelfosWebConfiguration.RS_CONFIG_FILE,
+            ArgumentsRecommendation.BUILD_RECOMMENDATION_MODEL,
+            Constants.LIBRARY_CONFIGURATION_DIRECTORY, DelfosWebConfiguration.LIBRARY_CONFIGURATION_DIRECTORY
         };
 
         Chronometer chronometer = new Chronometer();
@@ -79,7 +80,7 @@ public class RecommendToIndividual {
         Constants.setExitOnFail(false);
 
         RecommenderSystemConfiguration rsc = RecommenderSystemConfigurationFileParser
-                .loadConfigFile(Configuration.RS_CONFIG_FILE);
+                .loadConfigFile(DelfosWebConfiguration.RS_CONFIG_FILE);
 
         try {
             User user = rsc.datasetLoader.getUsersDataset().getUser(idUser);

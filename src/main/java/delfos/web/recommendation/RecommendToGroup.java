@@ -20,7 +20,7 @@ import delfos.main.Main;
 import delfos.main.managers.recommendation.ArgumentsRecommendation;
 import delfos.main.managers.recommendation.group.GroupRecommendation;
 import delfos.main.managers.recommendation.group.Recommend;
-import delfos.web.Configuration;
+import delfos.web.DelfosWebConfiguration;
 import delfos.web.json.RecommendationsJson;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -56,7 +56,8 @@ public class RecommendToGroup {
         String[] arguments = new String[]{
             GroupRecommendation.GROUP_MODE,
             ArgumentsRecommendation.BUILD_RECOMMENDATION_MODEL,
-            ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, Configuration.GRS_CONFIG_FILE};
+            ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, DelfosWebConfiguration.GRS_CONFIG_FILE,
+            Constants.LIBRARY_CONFIGURATION_DIRECTORY, DelfosWebConfiguration.LIBRARY_CONFIGURATION_DIRECTORY};
 
         Chronometer chronometer = new Chronometer();
         ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
@@ -84,8 +85,9 @@ public class RecommendToGroup {
         Constants.setExitOnFail(false);
         String[] configuration = new String[]{
             GroupRecommendation.GROUP_MODE,
-            ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, Configuration.GRS_CONFIG_FILE,
-            GroupRecommendation.TARGET_GROUP};
+            ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, DelfosWebConfiguration.GRS_CONFIG_FILE,
+            GroupRecommendation.TARGET_GROUP,
+            Constants.LIBRARY_CONFIGURATION_DIRECTORY, DelfosWebConfiguration.LIBRARY_CONFIGURATION_DIRECTORY};
 
         String[] members = groupMembers.split(",");
 

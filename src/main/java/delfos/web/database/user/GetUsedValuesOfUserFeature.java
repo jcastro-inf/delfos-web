@@ -11,7 +11,8 @@ import delfos.Constants;
 import delfos.dataset.basic.features.Feature;
 import delfos.dataset.basic.loader.types.DatasetLoader;
 import delfos.main.managers.database.DatabaseManager;
-import static delfos.web.Configuration.DATABASE_CONFIG_FILE;
+import delfos.web.DelfosWebConfiguration;
+import static delfos.web.DelfosWebConfiguration.DATABASE_CONFIG_FILE;
 import delfos.web.json.FeatureJson;
 import java.util.Arrays;
 import java.util.List;
@@ -47,9 +48,9 @@ public class GetUsedValuesOfUserFeature {
 
         DatasetLoader datasetLoader;
 
-        ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
-                DatabaseManager.MODE_PARAMETER,
-                DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE);
+        ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(DatabaseManager.MODE_PARAMETER,
+                DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE,
+                Constants.LIBRARY_CONFIGURATION_DIRECTORY, DelfosWebConfiguration.LIBRARY_CONFIGURATION_DIRECTORY);
 
         datasetLoader = DatabaseManager.extractDatasetHandler(consoleParameters);
 
