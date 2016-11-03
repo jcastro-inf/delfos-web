@@ -38,9 +38,6 @@ public class ApplicationConfig extends Application {
         resources.add(delfos.web.database.item.GetUsedValuesOfItemFeature.class);
         resources.add(delfos.web.database.ratings.AddRating.class);
         resources.add(delfos.web.database.ratings.PrintRatings.class);
-        resources.add(delfos.web.database.user.AddUser.class);
-        resources.add(delfos.web.database.user.AddUserFeatures.class);
-        resources.add(delfos.web.database.user.PrintUserSet.class);
         resources.add(delfos.web.recommendation.RecommendNonPersonalised.class);
         resources.add(delfos.web.recommendation.RecommendToGroup.class);
         resources.add(delfos.web.recommendation.RecommendToIndividual.class);

@@ -41,24 +41,21 @@ public class GetAllItems {
     public JsonObject getAsJson() throws CommandLineParametersError {
         Constants.setExitOnFail(false);
 
-        List<Item> itemSet = getItemSet();
-        JsonArray items = ItemJson.getItemsArray(itemSet);
-
-        return Json.createObjectBuilder()
-                .add("status", "ok")
-                .add("message", "retrieve all items")
-                .add("items", items)
-                .build();
-    }
-
-    public List<Item> getItemSet() throws CommandLineParametersError {
-
         ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
                 DatabaseManager.MODE_PARAMETER,
                 DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE);
 
         DatasetLoader datasetHandler = DatabaseManager.extractDatasetHandler(consoleParameters);
 
-        return datasetHandler.getContentDataset().stream().sorted().collect(Collectors.toList());
+        List<Item> itemSet = datasetHandler.getContentDataset().stream().collect(Collectors.toList());
+
+        JsonArray itemsJsonArray = ItemJson.getItemsArray(itemSet);
+
+        return Json.createObjectBuilder()
+                .add("status", "ok")
+                .add("message", "retrieve all items")
+                .add("items", itemsJsonArray)
+                .build();
     }
+
 }

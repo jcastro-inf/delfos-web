@@ -21,13 +21,10 @@ import delfos.main.managers.recommendation.ArgumentsRecommendation;
 import delfos.main.managers.recommendation.group.GroupRecommendation;
 import delfos.main.managers.recommendation.group.Recommend;
 import delfos.web.Configuration;
-import delfos.web.database.user.AddUserFeatures;
 import delfos.web.json.RecommendationsJson;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.json.Json;
 import javax.json.JsonValue;
@@ -47,51 +44,43 @@ public class RecommendToGroup {
 
     @Path("BuildModel")
     @GET
-    public String buildModel_asText() {
+    public String buildModel_asText() throws CommandLineParametersError {
         return buildModel_asJson().toString();
     }
 
     @Path("BuildModel")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonValue buildModel_asJson() {
+    public JsonValue buildModel_asJson() throws CommandLineParametersError {
         Constants.setExitOnFail(false);
         String[] arguments = new String[]{
             GroupRecommendation.GROUP_MODE,
             ArgumentsRecommendation.BUILD_RECOMMENDATION_MODEL,
             ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, Configuration.GRS_CONFIG_FILE};
-        try {
 
-            Chronometer chronometer = new Chronometer();
-            ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
-                    arguments
-            );
-            Main.mainWithExceptions(consoleParameters);
+        Chronometer chronometer = new Chronometer();
+        ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
+                arguments
+        );
+        Main.mainWithExceptions(consoleParameters);
 
-            return Json.createObjectBuilder()
-                    .add("status", "ok")
-                    .add("timeTaken", chronometer.printTotalElapsed())
-                    .build();
-        } catch (CommandLineParametersError ex) {
-            Logger.getLogger(AddUserFeatures.class.getName()).log(Level.SEVERE, null, ex);
-            return Json.createObjectBuilder()
-                    .add("status", "error")
-                    .add("message", "Malformed command line parameters: " + Arrays.toString(arguments))
-                    .build();
-        }
+        return Json.createObjectBuilder()
+                .add("status", "ok")
+                .add("timeTaken", chronometer.printTotalElapsed())
+                .build();
 
     }
 
     @Path("Recommend/{groupMembers}")
     @GET
-    public String recommendToGroup_asText(@PathParam("groupMembers") String groupMembers) {
+    public String recommendToGroup_asText(@PathParam("groupMembers") String groupMembers) throws CommandLineParametersError {
         return recommendToGroup_asJson(groupMembers).toString();
     }
 
     @Path("Recommend/{groupMembers}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonValue recommendToGroup_asJson(@PathParam("groupMembers") String groupMembers) {
+    public JsonValue recommendToGroup_asJson(@PathParam("groupMembers") String groupMembers) throws CommandLineParametersError {
         Constants.setExitOnFail(false);
         String[] configuration = new String[]{
             GroupRecommendation.GROUP_MODE,
@@ -104,31 +93,23 @@ public class RecommendToGroup {
                 .flatMap(values -> Arrays.stream(values))
                 .collect(Collectors.toList())
                 .toArray(new String[0]);
-        try {
-            ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
-                    arguments
-            );
 
-            String configurationFile = ArgumentsRecommendation.extractConfigurationFile(consoleParameters);
-            if (!new File(configurationFile).exists()) {
-                ERROR_CODES.CONFIG_FILE_NOT_EXISTS.exit(new FileNotFoundException("Configuration file '" + configurationFile + "' not found"));
-            }
+        ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
+                arguments
+        );
 
-            RecommenderSystemConfiguration rsc = RecommenderSystemConfigurationFileParser.loadConfigFile(configurationFile);
-            DatasetLoader<? extends Rating> datasetLoader = rsc.datasetLoader;
-            GroupOfUsers targetGroup = Recommend.extractTargetGroup(consoleParameters, datasetLoader);
-            GroupRecommendations recommendToGroup = Recommend.recommendToGroup(rsc, targetGroup);
-
-            rsc.recommdendationsOutputMethod.writeRecommendations(recommendToGroup);
-            return RecommendationsJson.getJson(recommendToGroup);
-
-        } catch (CommandLineParametersError ex) {
-            Logger.getLogger(AddUserFeatures.class.getName()).log(Level.SEVERE, null, ex);
-            return Json.createObjectBuilder()
-                    .add("status", "error")
-                    .add("message", "Malformed command line parameters: " + Arrays.toString(arguments))
-                    .build();
+        String configurationFile = ArgumentsRecommendation.extractConfigurationFile(consoleParameters);
+        if (!new File(configurationFile).exists()) {
+            ERROR_CODES.CONFIG_FILE_NOT_EXISTS.exit(new FileNotFoundException("Configuration file '" + configurationFile + "' not found"));
         }
+
+        RecommenderSystemConfiguration rsc = RecommenderSystemConfigurationFileParser.loadConfigFile(configurationFile);
+        DatasetLoader<? extends Rating> datasetLoader = rsc.datasetLoader;
+        GroupOfUsers targetGroup = Recommend.extractTargetGroup(consoleParameters, datasetLoader);
+        GroupRecommendations recommendToGroup = Recommend.recommendToGroup(rsc, targetGroup);
+
+        rsc.recommdendationsOutputMethod.writeRecommendations(recommendToGroup);
+        return RecommendationsJson.getJson(recommendToGroup);
 
     }
 

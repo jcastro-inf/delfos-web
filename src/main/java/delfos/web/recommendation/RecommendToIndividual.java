@@ -19,12 +19,8 @@ import delfos.main.managers.recommendation.singleuser.Recommend;
 import delfos.main.managers.recommendation.singleuser.SingleUserRecommendation;
 import delfos.rs.recommendation.RecommendationsToUser;
 import delfos.web.Configuration;
-import delfos.web.database.user.AddUserFeatures;
 import delfos.web.json.RecommendationsJson;
 import delfos.web.json.UserJson;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonValue;
 import javax.ws.rs.GET;
@@ -43,14 +39,14 @@ public class RecommendToIndividual {
 
     @Path("BuildModel")
     @GET
-    public String buildModel_asText() {
+    public String buildModel_asText() throws CommandLineParametersError {
         return buildModel_asJson().toString();
     }
 
     @Path("BuildModel")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonValue buildModel_asJson() {
+    public JsonValue buildModel_asJson() throws CommandLineParametersError {
         Constants.setExitOnFail(false);
 
         String[] arguments = new String[]{
@@ -58,25 +54,15 @@ public class RecommendToIndividual {
             ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, Configuration.RS_CONFIG_FILE,
             ArgumentsRecommendation.BUILD_RECOMMENDATION_MODEL
         };
-        try {
 
-            Chronometer chronometer = new Chronometer();
-            ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
-                    arguments
-            );
-            Main.mainWithExceptions(consoleParameters);
+        Chronometer chronometer = new Chronometer();
+        ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(arguments);
+        Main.mainWithExceptions(consoleParameters);
 
-            return Json.createObjectBuilder()
-                    .add("status", "ok")
-                    .add("timeTaken", chronometer.printTotalElapsed())
-                    .build();
-        } catch (CommandLineParametersError ex) {
-            Logger.getLogger(AddUserFeatures.class.getName()).log(Level.SEVERE, null, ex);
-            return Json.createObjectBuilder()
-                    .add("status", "error")
-                    .add("message", "Malformed command line parameters: " + Arrays.toString(arguments))
-                    .build();
-        }
+        return Json.createObjectBuilder()
+                .add("status", "ok")
+                .add("timeTaken", chronometer.printTotalElapsed())
+                .build();
 
     }
 
@@ -92,18 +78,15 @@ public class RecommendToIndividual {
     public JsonValue recommendToIndividual_asJson(@PathParam(UserJson.ID_USER) int idUser) {
         Constants.setExitOnFail(false);
 
-        RecommenderSystemConfiguration rsc;
+        RecommenderSystemConfiguration rsc = RecommenderSystemConfigurationFileParser
+                .loadConfigFile(Configuration.RS_CONFIG_FILE);
+
         try {
-            rsc = RecommenderSystemConfigurationFileParser.loadConfigFile(Configuration.RS_CONFIG_FILE);
-        } catch (Exception ex) {
-            return Json.createObjectBuilder()
-                    .add("status", "error")
-                    .add("message", ex.getMessage())
-                    .add(UserJson.ID_USER, idUser).build();
-        }
-        User user;
-        try {
-            user = rsc.datasetLoader.getUsersDataset().getUser(idUser);
+            User user = rsc.datasetLoader.getUsersDataset().getUser(idUser);
+
+            RecommendationsToUser recommendToUser = Recommend.recommendToUser(rsc, user);
+            rsc.recommdendationsOutputMethod.writeRecommendations(recommendToUser);
+            return RecommendationsJson.getJson(recommendToUser);
         } catch (UserNotFound ex) {
             return Json.createObjectBuilder()
                     .add("status", "error")
@@ -111,9 +94,6 @@ public class RecommendToIndividual {
                     .add(UserJson.ID_USER, idUser).build();
         }
 
-        RecommendationsToUser recommendToUser = Recommend.recommendToUser(rsc, user);
-        rsc.recommdendationsOutputMethod.writeRecommendations(recommendToUser);
-        return RecommendationsJson.getJson(recommendToUser);
     }
 
 }

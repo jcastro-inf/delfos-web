@@ -39,21 +39,6 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.TEXT_PLAIN)
 public class GetItemsWith {
 
-    @GET
-    public String getAsPlainNoParameters() {
-        return getAsJsonNoParameters().toString();
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getAsJsonNoParameters() {
-        return Json.createObjectBuilder()
-                .add("status", "ok")
-                .add("message", "specify a filter parameter")
-                .add("info", "Expected format: (featureName=value([,featureName=value])*")
-                .build();
-    }
-
     @Path("{features}")
     @GET
     public String getAsPlain(@PathParam("features") String features) throws CommandLineParametersError {
@@ -100,6 +85,7 @@ public class GetItemsWith {
         items.forEach(item -> itemsArrayJson.add(ItemJson.create(item)));
 
         return Json.createObjectBuilder()
+                .add("status", "ok")
                 .add("message", "requested items with'" + features + "'")
                 .add("query", "requested items with'" + features + "'")
                 .add("numItems", items.size())

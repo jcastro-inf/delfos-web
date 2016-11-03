@@ -38,7 +38,7 @@ public class RecommendationsJson {
         JsonArrayBuilder recommendationsListJson = Json.createArrayBuilder();
         recommendationsList.forEach((Recommendation recommendation) -> {
             JsonObjectBuilder recommendationJson = Json.createObjectBuilder();
-            recommendationJson.add("idItem", recommendation.getItem().getId());
+            recommendationJson.add(ItemJson.ID_ITEM, recommendation.getItem().getId());
             if (!Recommendation.NON_COVERAGE_FAILURES.test(recommendation)) {
                 recommendationJson.add("preference", "NaN");
             } else {

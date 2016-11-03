@@ -53,6 +53,7 @@ public class GetItemDetails {
         try {
             Item item = datasetLoader.getContentDataset().getItem(idItem);
             return Json.createObjectBuilder()
+                    .add("status", "ok")
                     .add("message", "item with id " + idItem)
                     .add(ItemJson.ITEM, ItemJson.createWithFeatures(item))
                     .build();

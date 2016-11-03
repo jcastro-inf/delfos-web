@@ -18,11 +18,7 @@ import delfos.main.managers.recommendation.nonpersonalised.NonPersonalisedRecomm
 import delfos.main.managers.recommendation.nonpersonalised.Recommend;
 import delfos.rs.recommendation.RecommendationsToUser;
 import delfos.web.Configuration;
-import delfos.web.database.user.AddUserFeatures;
 import delfos.web.json.RecommendationsJson;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonValue;
 import javax.ws.rs.GET;
@@ -40,14 +36,14 @@ public class RecommendNonPersonalised {
 
     @Path("BuildModel")
     @GET
-    public String buildModel_asText() {
+    public String buildModel_asText() throws CommandLineParametersError {
         return buildModel_asJson().toString();
     }
 
     @Path("BuildModel")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonValue buildModel_asJson() {
+    public JsonValue buildModel_asJson() throws CommandLineParametersError {
         Constants.setExitOnFail(false);
 
         String[] arguments = new String[]{
@@ -56,25 +52,17 @@ public class RecommendNonPersonalised {
             ArgumentsRecommendation.BUILD_RECOMMENDATION_MODEL,
             Constants.LIBRARY_CONFIGURATION_DIRECTORY, Configuration.LIBRARY_CONFIGURATION_DIRECTORY
         };
-        try {
 
-            Chronometer chronometer = new Chronometer();
-            ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
-                    arguments
-            );
-            Main.mainWithExceptions(consoleParameters);
+        Chronometer chronometer = new Chronometer();
+        ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
+                arguments
+        );
+        Main.mainWithExceptions(consoleParameters);
 
-            return Json.createObjectBuilder()
-                    .add("status", "ok")
-                    .add("timeTaken", chronometer.printTotalElapsed())
-                    .build();
-        } catch (CommandLineParametersError ex) {
-            Logger.getLogger(AddUserFeatures.class.getName()).log(Level.SEVERE, null, ex);
-            return Json.createObjectBuilder()
-                    .add("status", "error")
-                    .add("message", "Malformed command line parameters: " + Arrays.toString(arguments))
-                    .build();
-        }
+        return Json.createObjectBuilder()
+                .add("status", "ok")
+                .add("timeTaken", chronometer.printTotalElapsed())
+                .build();
 
     }
 
@@ -90,15 +78,9 @@ public class RecommendNonPersonalised {
     public JsonValue recommendToNonPersonalised_asJson() {
         Constants.setExitOnFail(false);
 
-        RecommenderSystemConfiguration rsc;
-        try {
-            rsc = RecommenderSystemConfigurationFileParser.loadConfigFile(Configuration.NON_PERSONALISED_CONFIG_FILE);
-        } catch (Exception ex) {
-            return Json.createObjectBuilder()
-                    .add("status", "error")
-                    .add("message", ex.getMessage())
-                    .build();
-        }
+        RecommenderSystemConfiguration rsc = RecommenderSystemConfigurationFileParser
+                .loadConfigFile(Configuration.NON_PERSONALISED_CONFIG_FILE);
+
         User user = User.ANONYMOUS_USER;
 
         RecommendationsToUser recommendToUser = Recommend.computeRecommendations(rsc, user);
