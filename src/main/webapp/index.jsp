@@ -3,9 +3,8 @@
     Created on : 03/11/2016, 8:44:57 AM
     Author     : jcastro
 --%>
-<%@page import="delfos.web.database.item.GetUsedValuesOfItemFeature"%>
-<%@page import="delfos.web.database.item.GetItemsWith"%>
-<%@page import="delfos.web.database.item.AddItemFeatures"%>
+<%@page import="delfos.web.database.user.*"%>
+<%@page import="delfos.web.database.item.*"%>
 <%@page import="delfos.CommandLineParametersError"%>
 <%@page import="delfos.main.managers.database.submanagers.DatabaseCaseUseSubManager"%>
 <%@page import="delfos.dataset.basic.loader.types.DatasetLoader"%>
@@ -13,16 +12,21 @@
 <%@page import="delfos.ConsoleParameters"%>
 <%@page import="delfos.dataset.changeable.ChangeableDatasetLoader"%>
 <%@page import="delfos.Constants"%>
-<%@page import="delfos.web.database.item.AddItem"%>
-<%@page import="delfos.web.database.item.GetItemDetails"%>
-<%@page import="delfos.web.database.item.GetFeaturesOfAllItems"%>
 <%@page import="org.netbeans.rest.application.config.ApplicationConfig"%>
-<%@page import="delfos.web.database.item.GetAllItems"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 5px;
+            }
+        </style>
         <title>JSP Page</title>
     </head>
     <body>
@@ -53,7 +57,8 @@
 
         <p>This service is operating over <%=datasetLoader.getAlias()%> dataset</p>
 
-        <table border="1" cellpadding="1">
+        <h2>Items</h2>
+        <table cellpadding="1">
             <thead>
                 <tr>
                     <th>Method</th>
@@ -104,6 +109,63 @@
                     <td>Retrieves and returns all items in the database (id,name)</td>
                     <td>none</td>
                     <td> <a href="./webresources/Database/GetUsedValuesOfItemFeature/year">link</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <h2>Users</h2>
+        <table cellpadding="1">
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Description</th>
+                    <th>Parameters</th>
+                    <th>Resource</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><%= isWritable ? "" : "<strike>"%><%=AddUser.class.getSimpleName()%><%= isWritable ? "" : "</strike>"%></td>
+                    <td>Retrieves and returns all features defined for users</td>
+                    <td>none</td>
+                    <td><%= isWritable ? "" : "<strike>"%><a href="./webresources/Database/AddUser/1">link</a><%= isWritable ? "" : "</strike>"%></td>
+                </tr>
+                <tr>
+                    <td><%= isWritable ? "" : "<strike>"%><%=AddUserFeatures.class.getSimpleName()%><%= isWritable ? "" : "</strike>"%></td>
+                    <td>Adds the specified features to the user</td>
+                    <td>id, features</td>
+                    <td><%= isWritable ? "" : "<strike>"%><a href="./webresources/Database/AddUserFeatures/1/name=Toy%20Story%20(1995),year=1995">link</a><%= isWritable ? "" : "</strike>"%></td>
+                </tr>
+                <tr>
+                    <td><%=GetAllUsers.class.getSimpleName()%></td>
+                    <td>Returns all users in the database (id,name)</td>
+                    <td>none</td>
+                    <td> <a href="./webresources/Database/GetAllUsers">link</a></td>
+                </tr>
+                <tr>
+                    <td><%=GetFeaturesOfAllUsers.class.getSimpleName()%></td>
+                    <td>Returns all features defined for users</td>
+                    <td>none</td>
+                    <td> <a href="./webresources/Database/GetFeaturesOfAllUsers">link</a></td>
+                </tr>
+                <tr>
+                    <td><%=GetUserDetails.class.getSimpleName()%></td>
+                    <td>Retrieves all details of user with the specified <b>id</b></td>
+                    <td>id</td>
+                    <td> <a href="./webresources/Database/GetUserDetails/1">link</a></td>
+                </tr>
+                <tr>
+                    <td><%=GetUsersWith.class.getSimpleName()%></td>
+                    <td>Returns all users with the specified parameter values</td>
+                    <td>features</td>
+                    <td> <a href="./webresources/Database/GetUsersWith/year=1990,Drama=1">link</a></td>
+                </tr>
+                <tr>
+                    <td><%=GetUsedValuesOfUserFeature.class.getSimpleName()%></td>
+                    <td>Retrieves and returns all users in the database (id,name)</td>
+                    <td>none</td>
+                    <td> <a href="./webresources/Database/GetUsedValuesOfUserFeature/year">link</a></td>
                 </tr>
             </tbody>
         </table>
