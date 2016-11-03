@@ -3,6 +3,7 @@
     Created on : 03/11/2016, 8:44:57 AM
     Author     : jcastro
 --%>
+<%@page import="delfos.configureddatasets.ConfiguredDatasetsFactory"%>
 <%@page import="delfos.web.Index"%>
 <%@page import="delfos.web.database.ratings.GetRatingsOfItem"%>
 <%@page import="delfos.web.database.ratings.GetRatingsOfUser"%>
@@ -47,6 +48,7 @@
 
             boolean isWritable;
             DatasetLoader datasetLoader;
+
             try {
                 ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
                         DatabaseManager.MODE_PARAMETER,
@@ -54,10 +56,11 @@
 
                 datasetLoader = DatabaseManager.extractDatasetHandler(consoleParameters);
                 isWritable = DatabaseCaseUseSubManager.isDatasetLoaderChangeable(datasetLoader);
-            } catch (CommandLineParametersError ex) {
+            } catch (Exception ex) {
                 isWritable = false;
-                datasetLoader = null;
+                datasetLoader = ConfiguredDatasetsFactory.getInstance().getDatasetLoader("ml-100k");
             }
+
 
         %>
 
