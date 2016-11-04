@@ -50,7 +50,7 @@ public class GetItemsWith {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonObject getAsJson(@PathParam("features") String features) throws CommandLineParametersError {
-        Constants.setExitOnFail(false);
+        DelfosWebConfiguration.setConfiguration();
 
         DatasetLoader datasetLoader;
 

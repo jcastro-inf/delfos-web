@@ -3,6 +3,8 @@
     Created on : 03/11/2016, 8:44:57 AM
     Author     : jcastro
 --%>
+<%@page import="java.io.File"%>
+<%@page import="delfos.configuration.ConfigurationManager"%>
 <%@page import="delfos.web.DelfosWebConfiguration"%>
 <%@page import="delfos.configureddatasets.ConfiguredDatasetsFactory"%>
 <%@page import="delfos.web.Index"%>
@@ -45,7 +47,7 @@
 
         <%
 
-            Constants.setExitOnFail(false);
+            DelfosWebConfiguration.setConfiguration();
 
             boolean isWritable;
             DatasetLoader datasetLoader;

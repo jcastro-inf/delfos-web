@@ -55,7 +55,7 @@ public class AddRating {
             @PathParam("idUser") int idUser,
             @PathParam("idItem") int idItem,
             @PathParam("value") double value) {
-        Constants.setExitOnFail(false);
+        DelfosWebConfiguration.setConfiguration();
 
         ChangeableDatasetLoader changeableDatasetLoader;
         {

@@ -41,7 +41,7 @@ public class AddUser {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getAsJSon(@PathParam(UserJson.ID_USER) int idUser) throws CommandLineParametersError {
-        Constants.setExitOnFail(false);
+        DelfosWebConfiguration.setConfiguration();
 
         ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(DatabaseManager.MODE_PARAMETER,
                 DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML, DATABASE_CONFIG_FILE,

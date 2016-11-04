@@ -47,7 +47,7 @@ public class RecommendToIndividual {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonValue buildModel_asJson() throws CommandLineParametersError {
-        Constants.setExitOnFail(false);
+        DelfosWebConfiguration.setConfiguration();
 
         String[] arguments = new String[]{
             SingleUserRecommendation.SINGLE_USER_MODE,
@@ -77,7 +77,7 @@ public class RecommendToIndividual {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonValue recommendToIndividual_asJson(@PathParam(UserJson.ID_USER) int idUser) {
-        Constants.setExitOnFail(false);
+        DelfosWebConfiguration.setConfiguration();
 
         RecommenderSystemConfiguration rsc = RecommenderSystemConfigurationFileParser
                 .loadConfigFile(DelfosWebConfiguration.RS_CONFIG_FILE);

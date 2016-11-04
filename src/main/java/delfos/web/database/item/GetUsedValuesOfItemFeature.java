@@ -44,7 +44,7 @@ public class GetUsedValuesOfItemFeature {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonObject getAsJson(@PathParam(FeatureJson.FEATURE_NAME) String featureName) throws CommandLineParametersError {
-        Constants.setExitOnFail(false);
+        DelfosWebConfiguration.setConfiguration();
 
         DatasetLoader datasetLoader;
 

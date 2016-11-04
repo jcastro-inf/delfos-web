@@ -46,7 +46,7 @@ public class AddUserFeatures {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonObject getAsJson(@PathParam(UserJson.ID_USER) int idUser, @PathParam(FeatureJson.FEATURES) String features) throws CommandLineParametersError {
-        Constants.setExitOnFail(false);
+        DelfosWebConfiguration.setConfiguration();
 
         if (!ParameterParser.isFeaturesToAddWithSuffixValid(features) || !ParameterParser.isFeaturesToAddValid(features)) {
             return ParameterParser.errorJson(features);

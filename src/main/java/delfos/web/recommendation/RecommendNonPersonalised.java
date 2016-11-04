@@ -44,7 +44,7 @@ public class RecommendNonPersonalised {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonValue buildModel_asJson() throws CommandLineParametersError {
-        Constants.setExitOnFail(false);
+        DelfosWebConfiguration.setConfiguration();
 
         String[] arguments = new String[]{
             NonPersonalisedRecommendation.NON_PERSONALISED_MODE,
@@ -76,7 +76,7 @@ public class RecommendNonPersonalised {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonValue recommendToNonPersonalised_asJson() {
-        Constants.setExitOnFail(false);
+        DelfosWebConfiguration.setConfiguration();
 
         RecommenderSystemConfiguration rsc = RecommenderSystemConfigurationFileParser
                 .loadConfigFile(DelfosWebConfiguration.NON_PERSONALISED_CONFIG_FILE);

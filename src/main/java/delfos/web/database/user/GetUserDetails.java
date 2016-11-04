@@ -41,7 +41,7 @@ public class GetUserDetails {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonObject getAsJson(@PathParam(UserJson.ID_USER) int idUser) throws CommandLineParametersError {
-        Constants.setExitOnFail(false);
+        DelfosWebConfiguration.setConfiguration();
 
         DatasetLoader datasetLoader;
 

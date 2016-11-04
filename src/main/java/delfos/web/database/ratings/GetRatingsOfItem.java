@@ -42,7 +42,7 @@ public class GetRatingsOfItem {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonValue getAsJson(@PathParam(ItemJson.ID_ITEM) int idItem) throws CommandLineParametersError {
-        Constants.setExitOnFail(false);
+        DelfosWebConfiguration.setConfiguration();
 
         ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(DatabaseManager.MODE_PARAMETER,
                 DatabaseManager.MANAGE_RATING_DATABASE_CONFIG_XML,

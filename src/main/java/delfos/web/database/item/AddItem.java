@@ -43,7 +43,7 @@ public class AddItem {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getAsJSon(@PathParam(ItemJson.ID_ITEM) int idItem) {
-        Constants.setExitOnFail(false);
+        DelfosWebConfiguration.setConfiguration();
 
         ChangeableDatasetLoader changeableDatasetLoader;
         try {
