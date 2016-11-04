@@ -117,7 +117,7 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <path>/${project.build.finalName}</path>
+                    <path>/delfos-web-ml-100k</path>
                     <update>true</update>
                     <url>http://localhost:8080/manager/text</url>
                     <username>tomcat</username>
