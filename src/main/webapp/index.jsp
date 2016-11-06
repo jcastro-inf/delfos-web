@@ -3,6 +3,7 @@
     Created on : 03/11/2016, 8:44:57 AM
     Author     : jcastro
 --%>
+<%@page import="delfos.web.recommendation.RecommendNonPersonalised"%>
 <%@page import="java.io.File"%>
 <%@page import="delfos.configuration.ConfigurationManager"%>
 <%@page import="delfos.web.DelfosWebConfiguration"%>
@@ -170,13 +171,13 @@
                     <td><%=GetUsersWith.class.getSimpleName()%></td>
                     <td>Returns all users with the specified parameter values</td>
                     <td>features</td>
-                    <td><a href="./webresources/Database/GetUsersWith/year=1990,Drama=1">link</a></td>
+                    <td><a href="./webresources/Database/GetUsersWith/occupation=technician">link</a></td>
                 </tr>
                 <tr>
                     <td><%=GetUsedValuesOfUserFeature.class.getSimpleName()%></td>
                     <td>Retrieves and returns all users in the database (id,name)</td>
                     <td>none</td>
-                    <td><a href="./webresources/Database/GetUsedValuesOfUserFeature/year">link</a></td>
+                    <td><a href="./webresources/Database/GetUsedValuesOfUserFeature/occupation">link</a></td>
                 </tr>
             </tbody>
         </table>
@@ -217,6 +218,87 @@
                     <td>Returns the ratings of specified item</td>
                     <td>idItem</td>
                     <td><a href="./webresources/Database/GetRatingsOfItem/1">link</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Non-personalised recommendations</h2>
+        <table cellpadding="1">
+            <%=Index.getColWidths()%>
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Description</th>
+                    <th>Parameters</th>
+                    <th>Resource</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Recommendation/NonPersonalised/BuildModel</td>
+                    <td>Builds the non personalised model</td>
+                    <td>none</td>
+                    <td><a href="./webresources/Recommendation/NonPersonalised/BuildModel">link</a></td>
+                </tr>
+                <tr>
+                    <td>Recommendation/NonPersonalised/Recommend</td>
+                    <td>Computes the non personalised recommendations</td>
+                    <td>none</td>
+                    <td><a href="./webresources/Recommendation/NonPersonalised/Recommend">link</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Personalised recommendations</h2>
+        <table cellpadding="1">
+            <%=Index.getColWidths()%>
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Description</th>
+                    <th>Parameters</th>
+                    <th>Resource</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Recommendation/RecommendToIndividual/BuildModel</td>
+                    <td>Builds the personalised recommendation model</td>
+                    <td>none</td>
+                    <td><a href="./webresources/Recommendation/RecommendToIndividual/BuildModel">link</a></td>
+                </tr>
+                <tr>
+                    <td>Recommendation/RecommendToIndividual/Recommend</td>
+                    <td>Computes the personalised recommendations</td>
+                    <td>idUser</td>
+                    <td><a href="./webresources/Recommendation/RecommendToIndividual/Recommend/1">link</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Group recommendations</h2>
+        <table cellpadding="1">
+            <%=Index.getColWidths()%>
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Description</th>
+                    <th>Parameters</th>
+                    <th>Resource</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Recommendation/RecommendToGroup/BuildModel</td>
+                    <td>Builds the personalised recommendation model</td>
+                    <td>none</td>
+                    <td><a href="./webresources/Recommendation/Group/BuildModel">link</a></td>
+                </tr>
+                <tr>
+                    <td>Recommendation/RecommendToIndividual/Recommend</td>
+                    <td>Computes the personalised recommendations</td>
+                    <td>idUser</td>
+                    <td><a href="./webresources/Recommendation/Group/Recommend/1,2,3,4">link</a></td>
                 </tr>
             </tbody>
         </table>
