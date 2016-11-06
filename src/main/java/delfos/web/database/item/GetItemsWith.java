@@ -75,9 +75,15 @@ public class GetItemsWith {
                     .filter(featureInner -> featureInner.getName().equals(entry.getKey()))
                     .findFirst().orElse(null);
 
-            Object featureValue = feature.getType().parseFeatureValue(entry.getValue());
-
-            candidateItems = candidateItems.filter(new FilterByFeatureValue(feature, featureValue));
+            if (feature == null) {
+                return Json.createObjectBuilder()
+                        .add("status", "error")
+                        .add("message", "Undefined feature '" + entry.getKey() + "' for items")
+                        .build();
+            } else {
+                Object featureValue = feature.getType().parseFeatureValue(entry.getValue());
+                candidateItems = candidateItems.filter(new FilterByFeatureValue(feature, featureValue));
+            }
         }
 
         List<Item> items = candidateItems.sorted().collect(Collectors.toList());
