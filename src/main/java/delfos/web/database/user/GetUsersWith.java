@@ -71,13 +71,20 @@ public class GetUsersWith {
 
         for (Map.Entry<String, String> entry : featuresMap.entrySet()) {
 
-            Feature feature = Arrays.asList(datasetLoader.getContentDataset().getFeatures()).parallelStream()
+            Feature feature = Arrays.asList(datasetLoader.getUsersDataset().getFeatures()).parallelStream()
                     .filter(featureInner -> featureInner.getName().equals(entry.getKey()))
                     .findFirst().orElse(null);
 
-            Object featureValue = feature.getType().parseFeatureValue(entry.getValue());
-
-            candidateUsers = candidateUsers.filter(new FilterByFeatureValue(feature, featureValue));
+            if (feature == null) {
+                return Json.createObjectBuilder()
+                        .add("status", "error")
+                        .add("message", "Undefined feature '" + entry.getKey() + "' for users")
+                        .add("query", "requested users with'" + features + "'")
+                        .build();
+            } else {
+                Object featureValue = feature.getType().parseFeatureValue(entry.getValue());
+                candidateUsers = candidateUsers.filter(new FilterByFeatureValue(feature, featureValue));
+            }
         }
 
         List<User> users = candidateUsers.sorted().collect(Collectors.toList());
