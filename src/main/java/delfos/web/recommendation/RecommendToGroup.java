@@ -10,6 +10,7 @@ import delfos.ConsoleParameters;
 import delfos.Constants;
 import delfos.ERROR_CODES;
 import delfos.common.Chronometer;
+import delfos.common.exceptions.dataset.users.UserNotFound;
 import delfos.configfile.rs.single.RecommenderSystemConfiguration;
 import delfos.configfile.rs.single.RecommenderSystemConfigurationFileParser;
 import delfos.dataset.basic.loader.types.DatasetLoader;
@@ -22,11 +23,15 @@ import delfos.main.managers.recommendation.group.GroupRecommendation;
 import delfos.main.managers.recommendation.group.Recommend;
 import delfos.web.DelfosWebConfiguration;
 import delfos.web.json.RecommendationsJson;
+import delfos.web.json.UserJson;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.List;
 import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -83,22 +88,22 @@ public class RecommendToGroup {
     @Produces(MediaType.APPLICATION_JSON)
     public JsonValue recommendToGroup_asJson(@PathParam("groupMembers") String groupMembers) throws CommandLineParametersError {
         DelfosWebConfiguration.setConfiguration();
-        String[] configuration = new String[]{
-            GroupRecommendation.GROUP_MODE,
-            ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, DelfosWebConfiguration.GRS_CONFIG_FILE,
-            GroupRecommendation.TARGET_GROUP,
-            Constants.LIBRARY_CONFIGURATION_DIRECTORY, DelfosWebConfiguration.LIBRARY_CONFIGURATION_DIRECTORY};
 
-        String[] members = groupMembers.split(",");
-
-        String[] arguments = Arrays.asList(configuration, members).stream()
-                .flatMap(values -> Arrays.stream(values))
-                .collect(Collectors.toList())
-                .toArray(new String[0]);
-
-        ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(
-                arguments
+        List<String> configuration = Arrays.asList(
+                GroupRecommendation.GROUP_MODE,
+                ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, DelfosWebConfiguration.GRS_CONFIG_FILE,
+                Constants.LIBRARY_CONFIGURATION_DIRECTORY, DelfosWebConfiguration.LIBRARY_CONFIGURATION_DIRECTORY
         );
+
+        List<String> members = Arrays.asList(groupMembers.split(","));
+
+        ArrayList<String> arguments = new ArrayList<>();
+
+        arguments.addAll(configuration);
+        arguments.add(GroupRecommendation.TARGET_GROUP);
+        arguments.addAll(members);
+
+        ConsoleParameters consoleParameters = ConsoleParameters.parseArguments(arguments.toArray(new String[0]));
 
         String configurationFile = ArgumentsRecommendation.extractConfigurationFile(consoleParameters);
         if (!new File(configurationFile).exists()) {
@@ -107,12 +112,28 @@ public class RecommendToGroup {
 
         RecommenderSystemConfiguration rsc = RecommenderSystemConfigurationFileParser.loadConfigFile(configurationFile);
         DatasetLoader<? extends Rating> datasetLoader = rsc.datasetLoader;
-        GroupOfUsers targetGroup = Recommend.extractTargetGroup(consoleParameters, datasetLoader);
+
+        GroupOfUsers targetGroup;
+        try {
+            targetGroup = Recommend.extractTargetGroup(consoleParameters, datasetLoader);
+
+        } catch (UserNotFound ex) {
+            return Json.createObjectBuilder()
+                    .add("status", "error")
+                    .add("message", "User not exists")
+                    .add(UserJson.ID_USER, ex.getIdUser()).build();
+        }
         GroupRecommendations recommendToGroup = Recommend.recommendToGroup(rsc, targetGroup);
 
-        rsc.recommdendationsOutputMethod.writeRecommendations(recommendToGroup);
-        return RecommendationsJson.getJson(recommendToGroup);
-
+        JsonObject recommendationsJson = RecommendationsJson.getJson(recommendToGroup);
+        JsonObjectBuilder responseJson = Json.createObjectBuilder().add("status", "ok");
+        try {
+            rsc.recommdendationsOutputMethod.writeRecommendations(recommendToGroup);
+        } catch (Exception ex) {
+            responseJson.add("warning", "Could not write recommendations, reason: " + ex.getMessage());
+        }
+        responseJson.add(RecommendationsJson.RECOMMENDATION, recommendationsJson);
+        return responseJson.build();
     }
 
 }

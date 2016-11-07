@@ -22,6 +22,8 @@ import delfos.web.DelfosWebConfiguration;
 import delfos.web.json.RecommendationsJson;
 import delfos.web.json.UserJson;
 import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -82,18 +84,28 @@ public class RecommendToIndividual {
         RecommenderSystemConfiguration rsc = RecommenderSystemConfigurationFileParser
                 .loadConfigFile(DelfosWebConfiguration.RS_CONFIG_FILE);
 
+        User user;
         try {
-            User user = rsc.datasetLoader.getUsersDataset().getUser(idUser);
-
-            RecommendationsToUser recommendToUser = Recommend.recommendToUser(rsc, user);
-            rsc.recommdendationsOutputMethod.writeRecommendations(recommendToUser);
-            return RecommendationsJson.getJson(recommendToUser);
+            user = rsc.datasetLoader.getUsersDataset().getUser(idUser);
         } catch (UserNotFound ex) {
             return Json.createObjectBuilder()
                     .add("status", "error")
                     .add("message", "User not exists")
-                    .add(UserJson.ID_USER, idUser).build();
+                    .add(UserJson.ID_USER, idUser)
+                    .build();
         }
+
+        RecommendationsToUser recommendToUser = Recommend.recommendToUser(rsc, user);
+
+        JsonObject recommendationsJson = RecommendationsJson.getJson(recommendToUser);
+        JsonObjectBuilder responseJson = Json.createObjectBuilder().add("status", "ok");
+        try {
+            rsc.recommdendationsOutputMethod.writeRecommendations(recommendToUser);
+        } catch (Exception ex) {
+            responseJson.add("warning", "Could not write recommendations, reason: " + ex.getMessage());
+        }
+        responseJson.add(RecommendationsJson.RECOMMENDATION, recommendationsJson);
+        return responseJson.build();
 
     }
 

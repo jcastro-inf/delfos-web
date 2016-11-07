@@ -22,10 +22,12 @@ import javax.json.JsonObjectBuilder;
  */
 public class RecommendationsJson {
 
+    public static final String RECOMMENDATION = "recommendation";
+    public static final String RECOMMENDATIONS = "recommendations";
+
     public static JsonObject getJson(Recommendations recommendations) {
 
-        JsonObjectBuilder recommendationsJson = Json.createObjectBuilder()
-                .add("status", "ok");
+        JsonObjectBuilder recommendationsJson = Json.createObjectBuilder();
 
         if (recommendations.getRecommendationComputationDetails().detailFieldSet().contains(DetailField.TimeTaken)) {
             final String timeTaken = (String) recommendations.getRecommendationComputationDetails().getDetailFieldValue(DetailField.TimeTaken);

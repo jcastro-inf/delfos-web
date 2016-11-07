@@ -20,6 +20,8 @@ import delfos.rs.recommendation.RecommendationsToUser;
 import delfos.web.DelfosWebConfiguration;
 import delfos.web.json.RecommendationsJson;
 import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -84,8 +86,17 @@ public class RecommendNonPersonalised {
         User user = User.ANONYMOUS_USER;
 
         RecommendationsToUser recommendToUser = Recommend.computeRecommendations(rsc, user);
-        rsc.recommdendationsOutputMethod.writeRecommendations(recommendToUser);
-        return RecommendationsJson.getJson(recommendToUser);
+
+        JsonObject recommendationsJson = RecommendationsJson.getJson(recommendToUser);
+        JsonObjectBuilder responseJson = Json.createObjectBuilder().add("status", "ok");
+        try {
+            rsc.recommdendationsOutputMethod.writeRecommendations(recommendToUser);
+        } catch (Exception ex) {
+            responseJson.add("warning", "Could not write recommendations, reason: " + ex.getMessage());
+        }
+        responseJson.add(RecommendationsJson.RECOMMENDATION, recommendationsJson);
+        return responseJson.build();
+
     }
 
 }
