@@ -25,31 +25,41 @@ public class RecommendationsJson {
     public static final String RECOMMENDATION = "recommendation";
     public static final String RECOMMENDATIONS = "recommendations";
 
+    public static final String PREFERENCE = "preference";
+    public static final String TARGET = "target";
+    public static final String TIME_TAKEN = "timeTaken";
+
     public static JsonObject getJson(Recommendations recommendations) {
 
         JsonObjectBuilder recommendationsJson = Json.createObjectBuilder();
 
         if (recommendations.getRecommendationComputationDetails().detailFieldSet().contains(DetailField.TimeTaken)) {
             final String timeTaken = (String) recommendations.getRecommendationComputationDetails().getDetailFieldValue(DetailField.TimeTaken);
-            recommendationsJson.add("timeTaken", DateCollapse.collapse(new Long(timeTaken)));
+            recommendationsJson.add(TIME_TAKEN, DateCollapse.collapse(new Long(timeTaken)));
         }
 
-        recommendationsJson.add("target", recommendations.getTargetIdentifier());
+        recommendationsJson.add(TARGET, recommendations.getTargetIdentifier());
         List<Recommendation> recommendationsList = recommendations.getRecommendations().stream().collect(Collectors.toList());
 
         JsonArrayBuilder recommendationsListJson = Json.createArrayBuilder();
+
         recommendationsList.forEach((Recommendation recommendation) -> {
-            JsonObjectBuilder recommendationJson = Json.createObjectBuilder();
-            recommendationJson.add(ItemJson.ID_ITEM, recommendation.getItem().getId());
-            if (!Recommendation.NON_COVERAGE_FAILURES.test(recommendation)) {
-                recommendationJson.add("preference", "NaN");
-            } else {
-                recommendationJson.add("preference", recommendation.getPreference().doubleValue());
-            }
+            JsonObjectBuilder recommendationJson = getJson(recommendation);
             recommendationsListJson.add(recommendationJson);
         });
-        recommendationsJson.add("recommendations", recommendationsListJson);
+        recommendationsJson.add(RECOMMENDATIONS, recommendationsListJson);
         return recommendationsJson.build();
+    }
+
+    public static JsonObjectBuilder getJson(Recommendation recommendation) {
+        JsonObjectBuilder recommendationJson = Json.createObjectBuilder();
+        recommendationJson.add(ItemJson.ID_ITEM, recommendation.getItem().getId());
+        if (!Recommendation.NON_COVERAGE_FAILURES.test(recommendation)) {
+            recommendationJson.add(PREFERENCE, "NaN");
+        } else {
+            recommendationJson.add(PREFERENCE, recommendation.getPreference().doubleValue());
+        }
+        return recommendationJson;
     }
 
 }
