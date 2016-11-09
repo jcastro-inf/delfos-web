@@ -16,7 +16,7 @@ import delfos.main.managers.database.DatabaseManager;
 import delfos.web.DelfosWebConfiguration;
 import static delfos.web.DelfosWebConfiguration.DATABASE_CONFIG_FILE;
 import delfos.web.database.ParameterParser;
-import delfos.web.database.feature.FilterByFeatureValue;
+import delfos.dataset.basic.features.FilterByFeatureValue;
 import delfos.web.json.ItemJson;
 import java.util.Arrays;
 import java.util.List;
