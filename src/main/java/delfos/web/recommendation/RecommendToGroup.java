@@ -162,6 +162,8 @@ public class RecommendToGroup {
             line = br.readLine();
         }
 
+        ret.append(configurationFile.getAbsolutePath()).append("\n");
+
         return ret.toString();
     }
 }
