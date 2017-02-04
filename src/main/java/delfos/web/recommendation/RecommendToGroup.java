@@ -147,31 +147,7 @@ public class RecommendToGroup {
     @GET
     @Produces(MediaType.TEXT_XML)
     public String configuration() throws CommandLineParametersError, FileNotFoundException, IOException {
-        DelfosWebConfiguration.setConfiguration();
-
-        File configurationFile = new File(DelfosWebConfiguration.GRS_CONFIG_FILE);
-        if (!configurationFile.exists()) {
-            ERROR_CODES.CONFIG_FILE_NOT_EXISTS.exit(new FileNotFoundException(
-                    "Configuration file '" + configurationFile.getAbsolutePath() + "' not found"));
-        }
-
-        Global.showMessageTimestamped("Loading config file " + configurationFile.getAbsolutePath());
-        SAXBuilder builder = new SAXBuilder();
-        Document doc = null;
-
-        try {
-            doc = builder.build(configurationFile);
-        } catch (JDOMException | IOException ex) {
-            Global.showError(ex);
-            ERROR_CODES.CANNOT_LOAD_CONFIG_FILE.exit(ex);
-            throw new IllegalStateException(ex);
-        }
-
-        Element config = doc.getRootElement();
-        config.setAttribute("configurationFilePath", configurationFile.getAbsolutePath());
-
-        XMLOutputter outputter = new XMLOutputter(Constants.getXMLFormat());
-
-        return outputter.outputString(doc);
+        return DelfosWebConfiguration.printXML(DelfosWebConfiguration.GRS_CONFIG_FILE);
     }
+
 }
