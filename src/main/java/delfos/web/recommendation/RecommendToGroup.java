@@ -10,6 +10,7 @@ import delfos.ConsoleParameters;
 import delfos.Constants;
 import delfos.ERROR_CODES;
 import delfos.common.Chronometer;
+import delfos.common.Global;
 import delfos.common.exceptions.dataset.users.UserNotFound;
 import delfos.configfile.rs.single.RecommenderSystemConfiguration;
 import delfos.configfile.rs.single.RecommenderSystemConfigurationFileParser;
@@ -24,10 +25,8 @@ import delfos.main.managers.recommendation.group.Recommend;
 import delfos.web.DelfosWebConfiguration;
 import delfos.web.json.RecommendationsJson;
 import delfos.web.json.UserJson;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +40,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.XMLOutputter;
 
 /**
  *
@@ -148,22 +152,26 @@ public class RecommendToGroup {
         File configurationFile = new File(DelfosWebConfiguration.GRS_CONFIG_FILE);
         if (!configurationFile.exists()) {
             ERROR_CODES.CONFIG_FILE_NOT_EXISTS.exit(new FileNotFoundException(
-                    "Configuration file '" + configurationFile + "' not found"));
+                    "Configuration file '" + configurationFile.getAbsolutePath() + "' not found"));
         }
 
-        BufferedReader br = new BufferedReader(new FileReader(configurationFile));
+        Global.showMessageTimestamped("Loading config file " + configurationFile.getAbsolutePath());
+        SAXBuilder builder = new SAXBuilder();
+        Document doc = null;
 
-        StringBuilder ret = new StringBuilder();
-
-        String line = br.readLine();
-        while (line != null) {
-            ret.append(line).append("\n");
-
-            line = br.readLine();
+        try {
+            doc = builder.build(configurationFile);
+        } catch (JDOMException | IOException ex) {
+            Global.showError(ex);
+            ERROR_CODES.CANNOT_LOAD_CONFIG_FILE.exit(ex);
+            throw new IllegalStateException(ex);
         }
 
-        ret.append(configurationFile.getAbsolutePath()).append("\n");
+        Element config = doc.getRootElement();
+        config.setAttribute("configurationFilePath", configurationFile.getAbsolutePath());
 
-        return ret.toString();
+        XMLOutputter outputter = new XMLOutputter(Constants.getXMLFormat());
+
+        return outputter.outputString(doc);
     }
 }
