@@ -24,8 +24,11 @@ import delfos.main.managers.recommendation.group.Recommend;
 import delfos.web.DelfosWebConfiguration;
 import delfos.web.json.RecommendationsJson;
 import delfos.web.json.UserJson;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -136,4 +139,29 @@ public class RecommendToGroup {
         return responseJson.build();
     }
 
+    @Path("Configuration")
+    @GET
+    @Produces(MediaType.TEXT_XML)
+    public String configuration() throws CommandLineParametersError, FileNotFoundException, IOException {
+        DelfosWebConfiguration.setConfiguration();
+
+        File configurationFile = new File(DelfosWebConfiguration.GRS_CONFIG_FILE);
+        if (!configurationFile.exists()) {
+            ERROR_CODES.CONFIG_FILE_NOT_EXISTS.exit(new FileNotFoundException(
+                    "Configuration file '" + configurationFile + "' not found"));
+        }
+
+        BufferedReader br = new BufferedReader(new FileReader(configurationFile));
+
+        StringBuilder ret = new StringBuilder();
+
+        String line = br.readLine();
+        while (line != null) {
+            ret.append(line).append("\n");
+
+            line = br.readLine();
+        }
+
+        return ret.toString();
+    }
 }
