@@ -8,7 +8,6 @@ package delfos.web.recommendation;
 import delfos.CommandLineParametersError;
 import delfos.ConsoleParameters;
 import delfos.Constants;
-import delfos.ERROR_CODES;
 import delfos.common.Chronometer;
 import delfos.common.exceptions.dataset.users.UserNotFound;
 import delfos.configfile.rs.single.RecommenderSystemConfiguration;
@@ -22,10 +21,7 @@ import delfos.rs.recommendation.RecommendationsToUser;
 import delfos.web.DelfosWebConfiguration;
 import delfos.web.json.RecommendationsJson;
 import delfos.web.json.UserJson;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -119,26 +115,7 @@ public class RecommendToIndividual {
     @GET
     @Produces(MediaType.TEXT_XML)
     public String configuration() throws CommandLineParametersError, FileNotFoundException, IOException {
-        DelfosWebConfiguration.setConfiguration();
-
-        File configurationFile = new File(DelfosWebConfiguration.RS_CONFIG_FILE);
-        if (!configurationFile.exists()) {
-            ERROR_CODES.CONFIG_FILE_NOT_EXISTS.exit(new FileNotFoundException(
-                    "Configuration file '" + configurationFile + "' not found"));
-        }
-
-        BufferedReader br = new BufferedReader(new FileReader(configurationFile));
-
-        StringBuilder ret = new StringBuilder();
-
-        String line = br.readLine();
-        while (line != null) {
-            ret.append(line).append("\n");
-
-            line = br.readLine();
-        }
-
-        return ret.toString();
+        return DelfosWebConfiguration.printXML(DelfosWebConfiguration.RS_CONFIG_FILE);
     }
 
 }
