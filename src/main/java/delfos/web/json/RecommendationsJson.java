@@ -39,7 +39,10 @@ public class RecommendationsJson {
         }
 
         recommendationsJson.add(TARGET, recommendations.getTargetIdentifier());
-        List<Recommendation> recommendationsList = recommendations.getRecommendations().stream().collect(Collectors.toList());
+        List<Recommendation> recommendationsList = recommendations.getRecommendations()
+                .stream()
+                .sorted(Recommendation.BY_ID)
+                .collect(Collectors.toList());
 
         JsonArrayBuilder recommendationsListJson = Json.createArrayBuilder();
 
