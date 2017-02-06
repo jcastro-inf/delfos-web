@@ -19,6 +19,7 @@ import delfos.main.managers.recommendation.nonpersonalised.Recommend;
 import delfos.rs.recommendation.RecommendationsToUser;
 import delfos.web.DelfosWebConfiguration;
 import delfos.web.json.RecommendationsJson;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.json.Json;
@@ -52,7 +53,7 @@ public class RecommendNonPersonalised {
 
         String[] arguments = new String[]{
             NonPersonalisedRecommendation.NON_PERSONALISED_MODE,
-            ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, DelfosWebConfiguration.NON_PERSONALISED_CONFIG_FILE,
+            ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, getConfigFile(),
             ArgumentsRecommendation.BUILD_RECOMMENDATION_MODEL,
             Constants.LIBRARY_CONFIGURATION_DIRECTORY, DelfosWebConfiguration.LIBRARY_CONFIGURATION_DIRECTORY
         };
@@ -83,14 +84,17 @@ public class RecommendNonPersonalised {
         DelfosWebConfiguration.setConfiguration();
 
         RecommenderSystemConfiguration rsc = RecommenderSystemConfigurationFileParser
-                .loadConfigFile(DelfosWebConfiguration.NON_PERSONALISED_CONFIG_FILE);
+                .loadConfigFile(getConfigFile());
 
         User user = User.ANONYMOUS_USER;
 
         RecommendationsToUser recommendToUser = Recommend.computeRecommendations(rsc, user);
 
         JsonObject recommendationsJson = RecommendationsJson.getJson(recommendToUser);
-        JsonObjectBuilder responseJson = Json.createObjectBuilder().add("status", "ok");
+        JsonObjectBuilder responseJson = Json.createObjectBuilder()
+                .add("status", "ok")
+                .add("configFile", getConfigFile());
+
         try {
             rsc.recommdendationsOutputMethod.writeRecommendations(recommendToUser);
         } catch (Exception ex) {
@@ -105,6 +109,11 @@ public class RecommendNonPersonalised {
     @GET
     @Produces(MediaType.TEXT_XML)
     public String configuration() throws CommandLineParametersError, FileNotFoundException, IOException {
-        return DelfosWebConfiguration.printXML(DelfosWebConfiguration.NON_PERSONALISED_CONFIG_FILE);
+        return DelfosWebConfiguration.printXML(getConfigFile());
+    }
+
+    public static String getConfigFile() {
+        return new File(DelfosWebConfiguration.NON_PERSONALISED_CONFIG_FILE)
+                .getAbsolutePath();
     }
 }

@@ -21,6 +21,7 @@ import delfos.rs.recommendation.RecommendationsToUser;
 import delfos.web.DelfosWebConfiguration;
 import delfos.web.json.RecommendationsJson;
 import delfos.web.json.UserJson;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.json.Json;
@@ -55,7 +56,7 @@ public class RecommendToIndividual {
 
         String[] arguments = new String[]{
             SingleUserRecommendation.SINGLE_USER_MODE,
-            ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, DelfosWebConfiguration.RS_CONFIG_FILE,
+            ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, getConfigFile(),
             ArgumentsRecommendation.BUILD_RECOMMENDATION_MODEL,
             Constants.LIBRARY_CONFIGURATION_DIRECTORY, DelfosWebConfiguration.LIBRARY_CONFIGURATION_DIRECTORY
         };
@@ -84,7 +85,7 @@ public class RecommendToIndividual {
         DelfosWebConfiguration.setConfiguration();
 
         RecommenderSystemConfiguration rsc = RecommenderSystemConfigurationFileParser
-                .loadConfigFile(DelfosWebConfiguration.RS_CONFIG_FILE);
+                .loadConfigFile(getConfigFile());
 
         User user;
         try {
@@ -100,7 +101,10 @@ public class RecommendToIndividual {
         RecommendationsToUser recommendToUser = Recommend.recommendToUser(rsc, user);
 
         JsonObject recommendationsJson = RecommendationsJson.getJson(recommendToUser);
-        JsonObjectBuilder responseJson = Json.createObjectBuilder().add("status", "ok");
+        JsonObjectBuilder responseJson = Json.createObjectBuilder()
+                .add("status", "ok")
+                .add("configFile", getConfigFile());
+
         try {
             rsc.recommdendationsOutputMethod.writeRecommendations(recommendToUser);
         } catch (Exception ex) {
@@ -115,7 +119,11 @@ public class RecommendToIndividual {
     @GET
     @Produces(MediaType.TEXT_XML)
     public String configuration() throws CommandLineParametersError, FileNotFoundException, IOException {
-        return DelfosWebConfiguration.printXML(DelfosWebConfiguration.RS_CONFIG_FILE);
+        return DelfosWebConfiguration.printXML(getConfigFile());
     }
 
+    public static String getConfigFile() {
+        return new File(DelfosWebConfiguration.RS_CONFIG_FILE)
+                .getAbsolutePath();
+    }
 }

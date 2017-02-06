@@ -10,7 +10,6 @@ import delfos.ConsoleParameters;
 import delfos.Constants;
 import delfos.ERROR_CODES;
 import delfos.common.Chronometer;
-import delfos.common.Global;
 import delfos.common.exceptions.dataset.users.UserNotFound;
 import delfos.configfile.rs.single.RecommenderSystemConfiguration;
 import delfos.configfile.rs.single.RecommenderSystemConfigurationFileParser;
@@ -40,11 +39,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.XMLOutputter;
 
 /**
  *
@@ -68,7 +62,7 @@ public class RecommendToGroup {
         String[] arguments = new String[]{
             GroupRecommendation.GROUP_MODE,
             ArgumentsRecommendation.BUILD_RECOMMENDATION_MODEL,
-            ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, DelfosWebConfiguration.GRS_CONFIG_FILE,
+            ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, getConfigFile(),
             Constants.LIBRARY_CONFIGURATION_DIRECTORY, DelfosWebConfiguration.LIBRARY_CONFIGURATION_DIRECTORY};
 
         Chronometer chronometer = new Chronometer();
@@ -96,9 +90,8 @@ public class RecommendToGroup {
     public JsonValue recommendToGroup_asJson(@PathParam("groupMembers") String groupMembers) throws CommandLineParametersError {
         DelfosWebConfiguration.setConfiguration();
 
-        List<String> configuration = Arrays.asList(
-                GroupRecommendation.GROUP_MODE,
-                ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, DelfosWebConfiguration.GRS_CONFIG_FILE,
+        List<String> configuration = Arrays.asList(GroupRecommendation.GROUP_MODE,
+                ArgumentsRecommendation.RECOMMENDER_SYSTEM_CONFIGURATION_FILE, getConfigFile(),
                 Constants.LIBRARY_CONFIGURATION_DIRECTORY, DelfosWebConfiguration.LIBRARY_CONFIGURATION_DIRECTORY
         );
 
@@ -133,7 +126,10 @@ public class RecommendToGroup {
         GroupRecommendations recommendToGroup = Recommend.recommendToGroup(rsc, targetGroup);
 
         JsonObject recommendationsJson = RecommendationsJson.getJson(recommendToGroup);
-        JsonObjectBuilder responseJson = Json.createObjectBuilder().add("status", "ok");
+        JsonObjectBuilder responseJson = Json.createObjectBuilder()
+                .add("status", "ok")
+                .add("configFile", getConfigFile());
+
         try {
             rsc.recommdendationsOutputMethod.writeRecommendations(recommendToGroup);
         } catch (Exception ex) {
@@ -147,7 +143,12 @@ public class RecommendToGroup {
     @GET
     @Produces(MediaType.TEXT_XML)
     public String configuration() throws CommandLineParametersError, FileNotFoundException, IOException {
-        return DelfosWebConfiguration.printXML(DelfosWebConfiguration.GRS_CONFIG_FILE);
+        return DelfosWebConfiguration.printXML(getConfigFile());
+    }
+
+    public static String getConfigFile() {
+        return new File(DelfosWebConfiguration.GRS_CONFIG_FILE)
+                .getAbsolutePath();
     }
 
 }
