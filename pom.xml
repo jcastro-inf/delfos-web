@@ -6,10 +6,7 @@
     <artifactId>delfos-web</artifactId>
     <version>1.0.20160802</version>
     <packaging>war</packaging>
-
-
-
-    <name>delfos-web</name>
+    <name>delfos.web</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
